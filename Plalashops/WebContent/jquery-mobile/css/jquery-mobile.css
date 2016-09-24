@@ -1,0 +1,22 @@
+/* .ui-mobile [data-role=header], .ui-mobile [data-role=footer] { */
+/* 	background-color: rgba(0, 89, 187, 0.71); */
+/* 	color: beige; */
+/* 	text-shadow: 1px 1px 12px #000; */
+/* /* 	font-size: 18px; */ */
+/* } */
+
+img {
+	width: 100%;
+}
+
+form label, legend {
+	color: #123456;
+}
+
+p {
+	text-align: center;
+}
+
+span {
+	color: red;
+}
