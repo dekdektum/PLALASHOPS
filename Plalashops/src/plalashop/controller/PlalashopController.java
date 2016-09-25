@@ -1,14 +1,22 @@
 package plalashop.controller;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import plalashop.domain.ImgMapping;
 import plalashop.domain.Product;
 import plalashop.domain.ProductType;
 import plalashop.domain.User;
@@ -18,6 +26,27 @@ import plalashop.utils.Utils;
 
 @Controller
 public class PlalashopController {
+	
+	public final static String UPLOAD_DIRECTORY = "D:/FilesPlalashops/";
+	 
+    // upload settings
+    private static final int MEMORY_THRESHOLD   = 1024 * 1024 * 3;  // 3MB
+    private static final int MAX_FILE_SIZE      = 1024 * 1024 * 40; // 40MB
+    private static final int MAX_REQUEST_SIZE   = 1024 * 1024 * 50; // 50MB
+    
+    
+    @RequestMapping(value="/404")
+    public String error404(HttpServletRequest request){
+    	request.setAttribute("Fail", "Session time out");
+     return "adminLoginAgen";
+    }
+     
+    @RequestMapping(value="/500")
+    public String error500(HttpServletRequest request){
+    	request.setAttribute("Fail", "Session time out");
+     return "adminLoginAgen";
+    }
+    
 	@RequestMapping(value = "/adminLogin")
 	public String adminLogin(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		request.setCharacterEncoding("UTF-8");
@@ -252,41 +281,229 @@ public class PlalashopController {
 		return "adminProduct";
 	}
 	
+	
 	@RequestMapping(value = "/adminShopEditProducts")
 	public String adminShopEditProducts(HttpServletRequest request) {
 		try {
 			request.setCharacterEncoding("UTF-8");
-			List<ProductType> productTypeList = PlalaShopsService.getProductTypeByProductTypeObj(new ProductType());
 			Product product = new Product();
 			product.setProductId(new Long(request.getParameter("productId")));
 			product = PlalaShopsService.getProductsByProductsObj(product).get(0);
+			request.setAttribute("editProduct", product);
+
+			List<ProductType> productTypeList = PlalaShopsService.getProductTypeByProductTypeObj(new ProductType());
 			request.setAttribute("productTypeList", productTypeList);
 			request.setAttribute(Utils.MENU_SELECT, "Products");
 			request.setAttribute("action", "editProduct");
-			request.setAttribute("editProduct",product);
-		} catch (Exception e1) {
-			e1.printStackTrace();
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return "adminProduct";
 	}
-	@RequestMapping(value = "/adminShopEditProducts")
-	public String adminShopEditProducts(HttpServletRequest request) {
+	@RequestMapping(value = "/editProductsAction")
+	public String editProductsAction(HttpServletRequest request) {
 		try {
 			request.setCharacterEncoding("UTF-8");
-			List<ProductType> productTypeList = PlalaShopsService.getProductTypeByProductTypeObj(new ProductType());
-			Product product = new Product();
-			product.setProductId(new Long(request.getParameter("productId")));
-			product = PlalaShopsService.getProductsByProductsObj(product).get(0);
-			request.setAttribute("productTypeList", productTypeList);
-			request.setAttribute(Utils.MENU_SELECT, "Products");
-			request.setAttribute("action", "editProduct");
-			request.setAttribute("editProduct",product);
-		} catch (Exception e1) {
-			e1.printStackTrace();
+			
+			String productId = request.getParameter("productId");
+			String productType = request.getParameter("producrType");
+			String productName = request.getParameter("productName");
+			String price = request.getParameter("price");
+			String salePrice = request.getParameter("salePrice");
+			String description = request.getParameter("description");
+			String sex = request.getParameter("sex");
+			String errorMsg = ValidateService.validateAddProuct(productType, productName, price, salePrice, description, sex);
+			if(errorMsg.equals("")){
+				Product product = new Product();
+				product.setProductId(new Long(productId));
+				product.setProductType(productType);
+				product.setProductName(productName);
+				product.setPrice(new Double(price));
+				product.setSalePrice(new Double(salePrice));
+				product.setDescription(description);
+				product.setSex(sex);
+				PlalaShopsService.updateProducts(product);
+				request.setAttribute("success", "Save \""+productName+"\" in system success");
+				adminSearchProducts(request);
+			}else{
+				request.setAttribute("Fail", errorMsg);
+				adminShopEditProducts(request);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return "adminProduct";
 	}
 	
+	@RequestMapping(value = "/adminShopAddImageProducts")
+	public String adminShopAddImageProducts(HttpServletRequest request) {
+		try {
+			request.getSession().setAttribute("productId", request.getParameter("productId"));
+			request.setCharacterEncoding("UTF-8");
+			Product product = new Product();
+			product.setProductId(new Long(request.getParameter("productId")));
+			product = PlalaShopsService.getProductsByProductsObj(product).get(0);
+			List<ProductType> productTypeList = PlalaShopsService.getProductTypeByProductTypeObj(new ProductType());
+			request.setAttribute("productTypeList", productTypeList);
+			request.setAttribute("addImageProduct", product);
+			request.setAttribute(Utils.MENU_SELECT, "Products");
+			request.setAttribute("action", "addImageProduct");
+			List<ImgMapping> imageList = PlalaShopsService.getImgMapping(request.getParameter("productId"));
+            request.setAttribute("imageList",imageList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "adminProduct";
+	}
+	
+	@RequestMapping(value = "/uploadFileImage")
+	public String uploadFileImage(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		String productId = (String) request.getSession().getAttribute("productId");
+		try {
+			Product product = new Product();
+			product.setProductId(new Long(productId));
+			product = PlalaShopsService.getProductsByProductsObj(product).get(0);
+			List<ProductType> productTypeList = PlalaShopsService.getProductTypeByProductTypeObj(new ProductType());
+			request.setAttribute("productTypeList", productTypeList);
+			request.setAttribute("addImageProduct", product);
+			request.setAttribute(Utils.MENU_SELECT, "Products");
+			request.setAttribute("action", "addImageProduct");
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			return error404(request);
+		}
+        if (!ServletFileUpload.isMultipartContent(request)) {
+        	request.setAttribute("Fail", "Please Select File!");
+            return "adminProduct";
+        }
+        
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        factory.setSizeThreshold(MEMORY_THRESHOLD);
+        factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        upload.setFileSizeMax(MAX_FILE_SIZE);
+        upload.setSizeMax(MAX_REQUEST_SIZE);
+        String uploadPath = UPLOAD_DIRECTORY;
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
+        try {
+            @SuppressWarnings("unchecked")
+            List<FileItem> formItems = upload.parseRequest(request);
+ 
+            if (formItems != null && formItems.size() > 0) {
+                for (FileItem item : formItems) {
+                    if (!item.isFormField()) {
+                        String fileName = "IMG_"+(new Date().getTime())+(new File(item.getName()).getName());
+                        String extension = fileName.substring(fileName.lastIndexOf("."));
+                        if(".png".equalsIgnoreCase(extension)){
+	                        String filePath = uploadPath + fileName;
+	                        File storeFile = new File(filePath);
+	                        item.write(storeFile);
+	                        PlalaShopsService.insertImgMapping(productId, fileName);
+	                        request.setAttribute("success", "Upload image success");
+                        }else{
+                        	request.setAttribute("Fail", "File is not PNG");
+                        }
+                    }
+                }
+            }
+            List<ImgMapping> imageList = PlalaShopsService.getImgMapping(productId);
+            request.setAttribute("imageList",imageList);
+        } catch (Exception ex) {
+            request.setAttribute("Fail", "Please Select File!");
+        }
+        return "adminProduct";
+    }
 
+	@RequestMapping(value = "/deleteImageProduct")
+	public String deleteImageProduct(HttpServletRequest request) {
+		try {
+//			request.getSession().setAttribute("imageId", request.getParameter("imageId"));
+			request.setCharacterEncoding("UTF-8");
+			Product product = new Product();
+			String productId = (String) request.getSession().getAttribute("productId");
+			String imageId = (String) request.getParameter("imageId");
+			PlalaShopsService.deleteImgMapping(imageId);
+			product.setProductId(new Long(productId));
+			product = PlalaShopsService.getProductsByProductsObj(product).get(0);
+			List<ProductType> productTypeList = PlalaShopsService.getProductTypeByProductTypeObj(new ProductType());
+			request.setAttribute("productTypeList", productTypeList);
+			request.setAttribute("addImageProduct", product);
+			request.setAttribute(Utils.MENU_SELECT, "Products");
+			request.setAttribute("action", "addImageProduct");
+			List<ImgMapping> imageList = PlalaShopsService.getImgMapping(request.getParameter("productId"));
+			request.setAttribute("imageList",imageList);
+			request.setAttribute("success", "Delete image success");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "adminProduct";
+	}
+	
+	@RequestMapping(value = "/register")
+	public String register(HttpServletRequest request) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return "register";
+	}
+	
+	@RequestMapping(value = "/mobileHeader")
+	public String mobileHeader(HttpServletRequest request) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return "mobileHeader";
+	}
+	
+	@RequestMapping(value = "/login")
+	public String login(HttpServletRequest request) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return "login";
+	}
+	
+	@RequestMapping(value = "/forgot")
+	public String forgot(HttpServletRequest request) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return "forgot";
+	}
+	
+	@RequestMapping(value = "/home")
+	public String home(HttpServletRequest request) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return "home";
+	}
+	
+	@RequestMapping(value = "/detail")
+	public String detail(HttpServletRequest request) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return "detail";
+	}
 }
 

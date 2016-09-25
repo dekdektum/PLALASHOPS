@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
 
+import plalashop.domain.ImgMapping;
 import plalashop.domain.Product;
 import plalashop.domain.ProductType;
 import plalashop.domain.User;
@@ -124,8 +125,63 @@ public class PlalaShopsService{
 		statement.setString(1, productId);
 		statement.executeUpdate();
 	}
+	public static void updateProducts(Product product) throws Exception{
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		StringBuilder sql = new StringBuilder();
+		sql.append(" UPDATE plalashops.products ");
+		sql.append(" SET product_name = ?,      ");
+		sql.append("   product_type = ?,        ");
+		sql.append("   price = ?,               ");
+		sql.append("   sale_price = ?,          ");
+		sql.append("   description = ?,         ");
+		sql.append("   sex = ?                  ");
+		sql.append(" WHERE product_id = ?		");
+		PreparedStatement statement = connection.prepareStatement(sql.toString());
+		statement.setString(1, product.getProductName());
+		statement.setString(2, product.getProductType());
+		statement.setDouble(3, product.getPrice());
+		statement.setDouble(4, product.getSalePrice());
+		statement.setString(5, product.getDescription());
+		statement.setString(6, product.getSex());
+		statement.setLong(7, product.getProductId());
+		
+		statement.executeUpdate();
+	}
 	
 
+	public static void insertImgMapping(String productId ,String fileName) throws Exception{
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		String sql ="INSERT INTO plalashops.img_maping(product_id,file_name)VALUES (?,?)";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, productId);
+		statement.setString(2, fileName);
+		statement.executeUpdate();
+	}
+	public static void deleteImgMapping(String imageId) throws Exception{
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		String sql ="DELETE FROM plalashops.img_maping WHERE imageId = ? ";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, imageId);
+		statement.executeUpdate();
+	}
+	
+	public static List<ImgMapping> getImgMapping(String productId) throws Exception{
+		StringBuilder sql = new StringBuilder("select * from plalashops.img_maping p where 1 = 1 ");
+		sql.append(Utils.whereInjection(productId, "product_id"));
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		Statement statement = connection.createStatement();
+		ResultSet resultSet = statement.executeQuery(sql.toString());
+		List<ImgMapping> imgList = new ArrayList<ImgMapping>();
+		while (resultSet.next()) {
+			imgList.add(new ImgMapping(resultSet));
+		}
+		connection.close();
+		return imgList;
+	}
 
 
 }

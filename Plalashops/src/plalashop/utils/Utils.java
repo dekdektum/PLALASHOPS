@@ -1,7 +1,19 @@
 package plalashop.utils;
 
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.imageio.ImageIO;
+
+import org.apache.commons.io.FileUtils;
+
+import sun.misc.BASE64Encoder;
 
 public class Utils {
 	public static final String USERNAME = "username";
@@ -94,4 +106,71 @@ public class Utils {
 		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
 		return sdf.format(date );
 	}
+	
+	public static String encodeToString(BufferedImage image, String type) {
+        String imageString = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+ 
+        try {
+            ImageIO.write(image, type, bos);
+            byte[] imageBytes = bos.toByteArray();
+ 
+            BASE64Encoder encoder = new BASE64Encoder();
+            imageString = encoder.encode(imageBytes);
+ 
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return imageString;
+    }
+	
+	public static String convertImageToBase64(String imageUrlPath){		 
+		String encodedBytes = null;
+		try {
+			BASE64Encoder encoder = new BASE64Encoder();
+			java.io.File file = new java.io.File(imageUrlPath);
+
+			byte[] filebyte = FileUtils.readFileToByteArray(file);
+				encodedBytes = encoder.encodeBuffer(filebyte);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "data:image/jpeg;base64,"+encodedBytes;
+	}
+	
+	public static byte[] scale(byte[] fileData, int width, int height) throws IOException {
+    	ByteArrayInputStream in = new ByteArrayInputStream(fileData);
+    	
+    		BufferedImage img = null;
+			try {
+				img = ImageIO.read(in);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    		if(height == 0) {
+    			height = (width * img.getHeight())/ img.getWidth(); 
+    		}
+    		if(width == 0) {
+    			width = (height * img.getWidth())/ img.getHeight();
+    		}
+    		Image scaledImage = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+    		BufferedImage imageBuff = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    		imageBuff.getGraphics().drawImage(scaledImage, 0, 0, new Color(0,0,0), null);
+
+    		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    		
+    		try {
+				ImageIO.write(imageBuff, "jpg", buffer);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally{
+				in.close();
+			}
+
+    	return buffer.toByteArray();
+    }
 }

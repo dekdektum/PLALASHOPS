@@ -7,6 +7,7 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ page import="java.util.List" %>
 <%@ page import="plalashop.domain.*" %>
+<%@ page import="java.io.*" %>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 <script src="bootstrap/js/jquery.min.js"></script>
@@ -157,6 +158,7 @@ function insertProduct(){
 							        <th>Product Name</th>
 							        <th>Sex</th>
 							        <th>Description</th>
+							        <th>Add Img</th>
 							        <th>Edit</th>
 							        <th>Delete</th>
 							      </tr>
@@ -171,6 +173,13 @@ function insertProduct(){
 							        <td><%= productList.get(i).getSex() == null || "".equals(productList.get(i).getSex()) ? "All" : productList.get(i).getSex() %></td>
 							        <td><textarea readonly="readonly" class="form-control" rows="3" id="description" name="description" style="width: 100%"><%= productList.get(i).getDescription() %></textarea></td>
 							         
+							        <td>
+							        	<center>
+							        	<a href="adminShopAddImageProducts.html?productId=<%=productList.get(i).getProductId() %>">
+							        		<img style="width: 25px;height: 25px" id='del<%=i %>' src="img/addImage.png">
+							        	</a>
+							        	</center>
+							        </td>
 							        <td>
 							        	<a href="adminShopEditProducts.html?productId=<%=productList.get(i).getProductId() %>">
 							        		<img style="width: 25px;height: 25px" id='del<%=i %>' src="img/edit.png">
@@ -192,12 +201,12 @@ function insertProduct(){
 				if("editProduct".equals(action)){ 
 					Product product = (Product) request.getAttribute("editProduct");
 			%>
-				<div class="panel panel-default" style="width: 80%"">
-					<div class="panel-heading" align="left">edit Product</div>
+				<div class="panel panel-default" style="width: 80%">
+					<div class="panel-heading" align="left">Edit Product</div>
 					<br/>	
 					<br/>
-					<form id='editProductsAction' method="post">
-						<input type="hidden" name="productNo" value="<%= product.getProductNo() %>">
+					<form id='editProductsAction' action="editProductsAction.html" method="post">
+						<input type="hidden" name="productId" value="<%= product.getProductId() %>">
 						<div class="form-group" align="center">
 							<div class="table-responsive">
 								<div class="col-sm-6">
@@ -243,10 +252,78 @@ function insertProduct(){
 						<script type="text/javascript">
 					      	document.getElementById('editProducrType').value = '<%= product.getProductType() %>';
 					      	document.getElementById('editSex').value = '<%= product.getSex().equals("")? "All" : product.getSex() %>';
-					      </script>
+					    </script>
 					</form>
 				</div>
-				<%} %>
+				<%} 
+				if("addImageProduct".equals(action)){
+					Product product = (Product) request.getAttribute("addImageProduct");
+					List<ImgMapping> imageList = (List<ImgMapping>)request.getAttribute("imageList");
+				%>
+					<div class="panel panel-default" style="width: 95%">
+					<div class="panel-heading" align="left">Add Image To <%= product.getProductName()  %></div>
+					<br/>	
+					<div class="form-group" align="center">
+						<div class="table-responsive">
+							  <table class="table" style="width: 95%" border="0">
+							    <thead>
+							      <tr>
+							        <th>Product No</th>
+							        <th>Product Type</th>
+							        <th>Product Name</th>
+							        <th>Sex</th>
+							      </tr>
+							    </thead>
+							    <tbody>
+							      <tr>
+							        <td><%= product.getProductNo() %></td>
+							        <td><%= product.getProductType() %></td>
+							        <td><%= product.getProductName() %></td>
+							        <td><%= product.getSex() == null || "".equals(product.getSex()) ? "All" : product.getSex() %></td>
+							      </tr>
+							    </tbody>
+							  </table>
+  						</div>
+					</div>
+					<form action="uploadFileImage.html" method="Post" enctype="multipart/form-data">
+					<input type="text" name="productId" value="<%=product.getProductId()%>"> 
+					 Select file to upload:
+		            <input type="file" name="uploadFile" />
+		            <br/><br/>
+		            <input type="submit" value="Upload" />
+					</form>
+					
+					<div class="form-group" align="center">
+						<div class="table-responsive">
+							  <table class="table" style="width: 50%" border="0">
+							    <thead>
+							      <tr>
+							        <th>Imgage View</th>
+							        <th>Delete</th>
+							      </tr>
+							    </thead>
+							    <tbody>
+								<% if(imageList != null && imageList.size() > 0){ %>
+								<% for(ImgMapping image : imageList){ %>
+							      <tr>
+							        <td><img src="<%=image.getFileName() %>" style="width:300px"></td>
+							        <td>
+							        	<a href="deleteImageProduct.html?imageId=<%=image.getImgId()%>">
+							        		<img style="width: 25px;height: 25px" src="img/delete.png">
+							        	</a>
+							        </td>
+							      </tr>
+							    <% }
+								
+								}%>
+							    </tbody>
+							  </table>
+  						</div>
+					</div>
+				</div>
+				<%
+				}
+				%>
 		</div>
 	</div>
 
