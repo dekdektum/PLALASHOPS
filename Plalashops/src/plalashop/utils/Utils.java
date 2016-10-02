@@ -125,19 +125,23 @@ public class Utils {
         return imageString;
     }
 	
-	public static String convertImageToBase64(String imageUrlPath){		 
-		String encodedBytes = null;
-		try {
-			BASE64Encoder encoder = new BASE64Encoder();
-			java.io.File file = new java.io.File(imageUrlPath);
-
-			byte[] filebyte = FileUtils.readFileToByteArray(file);
-				encodedBytes = encoder.encodeBuffer(filebyte);
-
-		} catch (Exception e) {
-			e.printStackTrace();
+	public static String convertImageToBase64(String imageUrlPath){	
+		if(imageUrlPath != null){
+			String encodedBytes = null;
+			try {
+				BASE64Encoder encoder = new BASE64Encoder();
+				java.io.File file = new java.io.File(imageUrlPath);
+	
+				byte[] filebyte = FileUtils.readFileToByteArray(file);
+					encodedBytes = encoder.encodeBuffer(filebyte);
+	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return "data:image/jpeg;base64,"+encodedBytes;
+		}else{
+			return null;
 		}
-		return "data:image/jpeg;base64,"+encodedBytes;
 	}
 	
 	public static byte[] scale(byte[] fileData, int width, int height) throws IOException {

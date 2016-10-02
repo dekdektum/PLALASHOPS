@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import plalashop.domain.Advertise;
 import plalashop.domain.ImgMapping;
 import plalashop.domain.Product;
 import plalashop.domain.ProductType;
@@ -35,18 +36,7 @@ public class PlalashopController {
     private static final int MAX_REQUEST_SIZE   = 1024 * 1024 * 50; // 50MB
     
     
-    @RequestMapping(value="/404")
-    public String error404(HttpServletRequest request){
-    	request.setAttribute("Fail", "Session time out");
-     return "adminLoginAgen";
-    }
-     
-    @RequestMapping(value="/500")
-    public String error500(HttpServletRequest request){
-    	request.setAttribute("Fail", "Session time out");
-     return "adminLoginAgen";
-    }
-    
+   
 	@RequestMapping(value = "/adminLogin")
 	public String adminLogin(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		request.setCharacterEncoding("UTF-8");
@@ -374,7 +364,6 @@ public class PlalashopController {
 		} catch (Exception e) {
 			
 			e.printStackTrace();
-			return error404(request);
 		}
         if (!ServletFileUpload.isMultipartContent(request)) {
         	request.setAttribute("Fail", "Please Select File!");
@@ -505,5 +494,162 @@ public class PlalashopController {
 		}
 		return "detail";
 	}
+	@RequestMapping(value = "/adminAdvertise")
+	public String adminAdvertise(HttpServletRequest request) {
+		try {
+			request.setAttribute("action", "");
+			request.setCharacterEncoding("UTF-8");
+			request.setAttribute(Utils.MENU_SELECT, "Advertise");
+			List<Advertise> advertiseList = PlalaShopsService.getAdvertise(new Advertise());
+			request.setAttribute("advertiseList", advertiseList);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return "adminAdvertise";
+	}
+	@RequestMapping(value = "/addAdvertise")
+	public String addAdvertise(HttpServletRequest request) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+			request.setAttribute(Utils.MENU_SELECT, "Advertise");
+			String advertiseOwner = request.getParameter("advertiseOwner");
+			String linkAdvertise = request.getParameter("linkAdvertise");
+			String queue = request.getParameter("queue");
+			Long queueLong = queue != null && queue.length() > 0 ? Long.parseLong(queue) : null;
+			PlalaShopsService.insertAdvertise(new Advertise(advertiseOwner, linkAdvertise,queueLong));
+			List<Advertise> advertiseList = PlalaShopsService.getAdvertise(new Advertise());
+			request.setAttribute("advertiseList", advertiseList);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return "adminAdvertise";
+	}
+	@RequestMapping(value = "/deleteAdvertise")
+	public String deleteAdvertise(HttpServletRequest request) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+			request.setAttribute(Utils.MENU_SELECT, "Advertise");
+			String id = request.getParameter("id");
+			PlalaShopsService.deleteAdvertise(id);
+			List<Advertise> advertiseList = PlalaShopsService.getAdvertise(new Advertise());
+			String linkAdvertise = request.getParameter("linkAdvertise");
+			request.setAttribute("advertiseList", advertiseList);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return "adminAdvertise";
+	}
+	@RequestMapping(value = "/editAdvertise")
+	public String editAdvertise(HttpServletRequest request) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+			request.setAttribute(Utils.MENU_SELECT, "Advertise");
+			String id = request.getParameter("id");
+			Advertise advertise = new Advertise();
+			advertise.setAdvertiseId(Long.parseLong(id));
+			advertise = PlalaShopsService.getAdvertise(advertise).get(0);
+			request.setAttribute("advertise", advertise);
+			request.setAttribute("action", "edit");
+			
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return "adminAdvertise";
+	}
+	@RequestMapping(value = "/editAdvertiseAction")
+	public String editAdvertiseAction(HttpServletRequest request) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+			request.setAttribute(Utils.MENU_SELECT, "Advertise");
+			String id = request.getParameter("id");
+			String advertiseOwner = request.getParameter("advertiseOwner");
+			String linkAdvertise = request.getParameter("linkAdvertise");
+			String queue = request.getParameter("queue");
+			Advertise advertise = new Advertise();
+			advertise.setAdvertiseId(Long.parseLong(id));
+			advertise.setAdvertiseOwner(advertiseOwner);
+			advertise.setLinkAdvertise(linkAdvertise);
+			Long queueLong = queue != null && queue.length() > 0 ? Long.parseLong(queue) : null;
+			advertise.setQueue(queueLong);
+			PlalaShopsService.updateAdvertise(advertise);
+			adminAdvertise(request);
+			
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return "adminAdvertise";
+	}
+	@RequestMapping(value = "/addImageAdvertise")
+	public String addImageAdvertise(HttpServletRequest request) {
+		try {
+			request.setAttribute(Utils.MENU_SELECT, "Advertise");
+			String id = request.getParameter("id");
+			Advertise advertise = new Advertise();
+			advertise.setAdvertiseId(Long.parseLong(id));
+			advertise = PlalaShopsService.getAdvertise(advertise).get(0);
+			request.setAttribute("advertise", advertise);
+			request.setAttribute("action", "uploadItem");
+			request.getSession().setAttribute("id",id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "adminAdvertise"; 
+	}
+	
+	@RequestMapping(value = "/uploadFileAdvertise")
+	public String uploadFileAdvertise(HttpServletRequest request,HttpServletResponse response) throws Exception {
+		request.setAttribute(Utils.MENU_SELECT, "Advertise");
+		request.setCharacterEncoding("UTF-8");
+		String id = (String) request.getSession().getAttribute("id");
+		Advertise advertise = new  Advertise();
+		advertise.setAdvertiseId(new Long(id));
+		advertise = PlalaShopsService.getAdvertise(advertise).get(0);
+		request.setAttribute("advertise", advertise);
+		request.setAttribute("action", "uploadItem");
+        if (!ServletFileUpload.isMultipartContent(request)) {
+        	request.setAttribute("Fail", "Please Select File!");
+            return "adminAdvertise";
+        }
+        
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        factory.setSizeThreshold(MEMORY_THRESHOLD);
+        factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        upload.setFileSizeMax(MAX_FILE_SIZE);
+        upload.setSizeMax(MAX_REQUEST_SIZE);
+        String uploadPath = UPLOAD_DIRECTORY;
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
+        try {
+            @SuppressWarnings("unchecked")
+            List<FileItem> formItems = upload.parseRequest(request);
+ 
+            if (formItems != null && formItems.size() > 0) {
+                for (FileItem item : formItems) {
+                    if (!item.isFormField()) {
+                        String fileName = "IMG_"+(new Date().getTime())+(new File(item.getName()).getName());
+                        String extension = fileName.substring(fileName.lastIndexOf("."));
+                        if(".png".equalsIgnoreCase(extension)){
+	                        String filePath = uploadPath + fileName;
+	                        File storeFile = new File(filePath);
+	                        item.write(storeFile);
+	                        advertise.setFileName(fileName);
+	                        PlalaShopsService.updateAdvertise(advertise);
+	                        request.setAttribute("success", "Upload image success");
+                        }else{
+                        	request.setAttribute("Fail", "File is not PNG");
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+            request.setAttribute("Fail", "Please Select File!");
+        }
+        
+        return adminAdvertise(request);
+    }
 }
 

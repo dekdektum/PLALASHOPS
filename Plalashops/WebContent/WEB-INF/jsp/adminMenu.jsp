@@ -23,6 +23,7 @@ body {
 				<li id='itemhomePage' <%= menuSelect.equals("Home") ? "class='active'" : "" %> ><a href="/Plalashops/adminHome.html">Home</a></li>
 				<li id='itemproductTypePage' <%= menuSelect.equals("ProductType") ? "class='active'" : "" %> ><a href="/Plalashops/adminProductType.html">Product Type</a></li>
 				<li id='itemproductsPage'  <%= menuSelect.equals("Products") ? "class='active'" : "" %> ><a href="/Plalashops/adminProduct.html">Products</a></li>
+				<li id='itemadvertisePage'  <%= menuSelect.equals("Advertise") ? "class='active'" : "" %> ><a href="/Plalashops/adminAdvertise.html">Advertise Setting</a></li>
 				<li id='itemoederManagementPage' <%= menuSelect.equals("Order") ? "class='active'" : "" %> ><a href="">Oeder Management</a></li>
 			</ul>
 		</div>

@@ -1,12 +1,8 @@
 package plalashop.domain;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import javax.imageio.ImageIO;
 
 import plalashop.controller.PlalashopController;
 import plalashop.utils.Utils;

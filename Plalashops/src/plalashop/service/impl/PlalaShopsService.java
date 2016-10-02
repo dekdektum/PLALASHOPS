@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
 
+import plalashop.domain.Advertise;
 import plalashop.domain.ImgMapping;
 import plalashop.domain.Product;
 import plalashop.domain.ProductType;
@@ -182,6 +183,67 @@ public class PlalaShopsService{
 		connection.close();
 		return imgList;
 	}
+	
+	
+	public static List<Advertise> getAdvertise(Advertise advertise) throws Exception{
+		StringBuilder sql = new StringBuilder("SELECT * FROM  plalashops.advertise WHERE 1 = 1 ");
+		sql.append(Utils.whereInjection(advertise.getAdvertiseId(), "advertise_id"));
+		sql.append(Utils.whereInjection(advertise.getAdvertiseOwner(), "advertise_owner"));
+//		sql.append(Utils.whereInjection(advertise.getFileName(), "file_name"));
+		sql.append(Utils.whereInjection(advertise.getLinkAdvertise(), "link_advertise"));
+		sql.append(Utils.whereInjection(advertise.getQueue(), "queue"));
+		sql.append(" ORDER BY queue");
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		Statement statement = connection.createStatement();
+		ResultSet resultSet = statement.executeQuery(sql.toString());
+		List<Advertise> imgList = new ArrayList<Advertise>();
+		while (resultSet.next()) {
+			imgList.add(new Advertise(resultSet));
+		}
+		connection.close();
+		return imgList;
+	}
+	
+	public static void deleteAdvertise(String advertiseId) throws Exception{
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		String sql ="DELETE FROM plalashops.advertise WHERE advertise_id = ? ";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, advertiseId);
+		statement.executeUpdate();
+	}
+	
+	public static void insertAdvertise(Advertise advertise) throws Exception{
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		String sql ="INSERT INTO plalashops.advertise (advertise_owner,link_advertise,queue)VALUES(?,?,?) ";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, advertise.getAdvertiseOwner());
+		statement.setString(2, advertise.getLinkAdvertise());
+		statement.setLong(3, advertise.getQueue());
+		statement.executeUpdate();
+	}
+	
+	public static void updateAdvertise(Advertise advertise) throws Exception{
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		StringBuilder sql = new StringBuilder();
+		sql.append(" UPDATE plalashops.advertise ");
+		sql.append(" SET advertise_owner = ?,      ");
+		sql.append("   file_name = ?,            ");
+		sql.append("   link_advertise = ?,       ");
+		sql.append("   queue = ?                 ");
+		sql.append(" WHERE advertise_id = ?      ");
+		PreparedStatement statement = connection.prepareStatement(sql.toString());
+		statement.setString(1, advertise.getAdvertiseOwner());
+		statement.setString(2, advertise.getFileName(1));
+		statement.setString(3, advertise.getLinkAdvertise());
+		statement.setLong(4, advertise.getQueue());
+		statement.setLong(5, advertise.getAdvertiseId());
+		statement.executeUpdate();
+	}
+	
 
 
 }
