@@ -6,12 +6,52 @@
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <style type="text/css">
-body {
-	background-image: url('http://crunchify.com/bg.png');
+
+<style type="text/css">
+.container {
+	text-align: center;
+	vertical-align: middle;
+	display: table-cell;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff),
+		to(#5dafd3));
+	background-image: -webkit-linear-gradient(#ffffff, #5dafd3);
+	background-image: -moz-linear-gradient(#ffffff, #5dafd3);
+	background-image: -ms-linear-gradient(#ffffff, #5dafd3);
+	background-image: -o-linear-gradient(#ffffff, #5dafd3);
+	background-image: linear-gradient(#ffffff, #5dafd3);
+}
+
+.new-Button {
+	width: 150px;
+	height: 70px;
+	border-radius: 10px;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 14px;
+	margin: 7px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) inset;
+}
+
+.new-Button:hover {
+	box-shadow: 0 0 12px #387BBE;
+	text-shadow: 0 1px 0 #fdf581;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.div-style-button {
+	text-shadow: 0 1px 0 #FFFFFF;
+	border-radius: 10px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) inset;
+}
+
+.div-style-button:hover {
+	text-shadow: 0 1px 0 #FFFFFF;
+	border-radius: 10px;
+	margin: 7px;
+	box-shadow: 0 0 12px #387BBE;
 }
 </style>
-
 </head>
 <body>
 <div class="container" style="width : 90%" >
