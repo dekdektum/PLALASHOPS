@@ -1,0 +1,84 @@
+@font-face {
+    font-family: myFirstFont;
+    src: url('SukhumvitSet.ttc');
+}
+body {
+	background: -webkit-linear-gradient(#1C6785, #6091A0, #668872, #1D5462);
+	background: -o-linear-gradient(#1C6785, #6091A0, #668872, #1D5462);
+	background: -moz-linear-gradient(#1C6785, #6091A0, #668872, #1D5462);
+	background: linear-gradient(#1C6785, #6091A0, #668872, #1D5462);
+	font-family: 'myFirstFont';
+}
+
+
+.botton-plala {
+background-color : white;
+border-radius: 10em 10em 10em 10em;
+text-align: center;
+height: 37px;
+width:90%;
+color: #1C6785;
+}
+
+::-webkit-input-placeholder {
+   text-align: center;
+   color: #1C6785;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   text-align: center;  
+   color: #1C6785;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   text-align: center;  
+   color: #1C6785;
+}
+
+:-ms-input-placeholder {  
+   text-align: center; 
+   color: #1C6785;
+}
+
+@media ( min-width : 320px) {
+	big {
+		font-size: 30px;
+		color: white;
+	}
+	small {
+		font-size: 10px;
+		color: white;
+	}
+}
+
+@media ( min-width :375px) {
+	big {
+		font-size: 40px;
+		color: white;
+	}
+	small {
+		font-size: 12px;
+		color: white;
+	}
+}
+
+@media ( min-width :414px) {
+	big {
+		font-size: 45px;
+		color: white;
+	}
+	small{
+		font-size: 14px;
+		color: white;
+	}
+}
+
+@media ( min-width :768px) {
+	big {
+		font-size: 60px;
+		color: white;
+	}
+	small{
+		font-size: 18px;
+		color: white;
+}

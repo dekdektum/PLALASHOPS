@@ -1,0 +1,90 @@
+ 
+ 
+@media only screen and (min-width : 768px) and (max-width : 1024px){
+	
+	/*Portrait & Landscape*/
+}
+
+@media (max-width: 979px) {
+	.product-detail{ 
+		width:510px;
+		margin-left:20px;
+	}
+	.info-box{ width:230px}
+	.table-product{
+		table-layout:fixed;
+	}
+	.table-product th.t1{
+		width:125px;
+	}
+	.table-product th.t2{
+		width:114px;
+	}
+	.table-product th.t3{
+		width:141px;
+	}
+ 	 
+	.pull-right{ float:right !important}
+	
+	.search-option .input-width{ width:214px}
+	.customer-search-result .input-width{ width:290px}
+	.customer-search-result .input-group{margin-right:14px;} 
+}
+@media (min-width: 768px) and (max-width: 979px) {}
+ 
+ 
+ 
+@media (max-width: 767px) {
+	body{ overflow-x:hidden; position:relative}
+	.container{
+		width:auto;
+		padding:0 20px;
+	}
+}
+
+
+
+/*Retina Display Media Query*/
+@media
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (   min--moz-device-pixel-ratio: 2),
+only screen and (     -o-min-device-pixel-ratio: 2/1),
+only screen and (        min-device-pixel-ratio: 2),
+only screen and (                min-resolution: 192dpi),
+only screen and (                min-resolution: 2dppx) { 
+  
+	.logo-site a{
+		background-image:url(../../images/device_sale_hi_light/logo-retina.png);
+		background-size:164px;
+	}
+	.logo-ais a{
+		background-image:url(../../images/device_sale_hi_light/logo-ais-retina.png);
+		background-size:155px;
+	}
+	
+	.icons{
+		background-image:url(../../images/device_sale_hi_light/icons-retina.png);
+		background-size:380px;
+	}
+	.out-of-stock{
+		background-image:url(../../images/device_sale_hi_light/out-of-stock-retina.png);
+		background-size:210px;
+	}
+	.img-title{
+		background-image:url(../../images/device_sale_hi_light/img-title-retina.png);
+		background-size:600px;
+	}
+	
+
+	.checkbox-group input[type=checkbox]:checked + label:after { left:0; top:3px}
+	 .modal-open .page{ left:0px } 
+	
+	
+}
+ 
+   
+
+
+
+
+

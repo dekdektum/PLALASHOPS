@@ -1,0 +1,8 @@
+button {
+	background-image: none;
+}
+
+.body legend,.body a {
+	font-family: "db_helvethaicaais_x55_regular",Arial,Tahoma;
+	font-size: 20px;
+}
