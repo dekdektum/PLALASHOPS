@@ -2,6 +2,7 @@ package plalashop.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -87,21 +88,29 @@ public class PlalashopController {
 
 	@RequestMapping(value = "/adminHome")
 	public String goToHome(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
+		
 		request.setAttribute(Utils.MENU_SELECT, "Home");
 		return "adminHome";
 	}
 
 	@RequestMapping(value = "/adminProductType")
 	public String goToProductType(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		request.setAttribute(Utils.MENU_SELECT, "ProductType");
 		return "adminProductType";
 	}
 
 	@RequestMapping(value="/insertProductType")
 	public String insertProductType(HttpServletRequest request) throws UnsupportedEncodingException{
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		request.setCharacterEncoding("UTF-8");
 		request.setAttribute(Utils.MENU_SELECT, "ProductType");
 		String productTypeName = request.getParameter("productType");
+		String fromName = request.getParameter("fromName") != null && request.getParameter("fromName").toString().length() > 0 ? "Y" : "N";
 		if(productTypeName != null && productTypeName.length() > 0){
 			try {
 				request.setAttribute(Utils.MENU_SELECT, "ProductType");
@@ -109,7 +118,7 @@ public class PlalashopController {
 				productType.setProductTypeName(productTypeName);
 				List<ProductType> productTypeList = PlalaShopsService.getProductTypeByProductTypeObj(productType);
 				if(productTypeList != null && productTypeList.size() == 0){
-					PlalaShopsService.insertProductType(productTypeName);
+					PlalaShopsService.insertProductType(productTypeName,fromName);
 					getProductTypeList(request);
 					request.setAttribute("success", "Save \""+productTypeName+"\" in system success");
 				}else{
@@ -125,15 +134,36 @@ public class PlalashopController {
 		}
 		return "adminProductType";
 	}
+	
+	@RequestMapping(value = "/addImageProduct")
+	public String addImageProduct(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
+		try {
+			request.setAttribute(Utils.MENU_SELECT, "ProductType");
+			String id = request.getParameter("id");
+			ProductType productType = new ProductType();
+			productType.setProductTypeId(Long.parseLong(id));
+			productType = PlalaShopsService.getProductTypeByProductTypeObj(productType).get(0);
+			request.setAttribute("productType", productType);
+			request.setAttribute("action", "uploadItem");
+			request.getSession().setAttribute("id",id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "adminProductType"; 
+	}
 
 	@RequestMapping(value = "/getProductTypeList")
 	public String getProductTypeList(HttpServletRequest request) {
-		
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		try {
 			request.setCharacterEncoding("UTF-8");
 			request.setAttribute(Utils.MENU_SELECT, "ProductType");
 			ProductType productType = new ProductType();
 			productType.setProductTypeName(request.getParameter("productType"));
+//			productType.setFormName(request.getParameter("fromName") != null && request.getParameter("fromName").toString().length() > 0 ? "Y" : "N");
 			List<ProductType> productTypeList = PlalaShopsService.getProductTypeByProductTypeObj(productType);
 			request.setAttribute("productTypeList", productTypeList);
 		} catch (Exception e) {
@@ -144,6 +174,8 @@ public class PlalashopController {
 	
 	@RequestMapping(value = "/deleteProductType")
 	public String deleteProductType(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		try {
 			request.setCharacterEncoding("UTF-8");
 			request.setAttribute(Utils.MENU_SELECT, "ProductType");
@@ -159,6 +191,8 @@ public class PlalashopController {
 	
 	@RequestMapping(value = "/adminProduct")
 	public String adminProduct(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		List<ProductType> productTypeList;
 		try {
 			request.setCharacterEncoding("UTF-8");
@@ -175,6 +209,8 @@ public class PlalashopController {
 	
 	@RequestMapping(value = "/adminShopAddProducts")
 	public String adminShopAddProducts(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		List<ProductType> productTypeList;
 		try {
 			request.setCharacterEncoding("UTF-8");
@@ -190,6 +226,8 @@ public class PlalashopController {
 	
 	@RequestMapping(value = "/adminAddProductsAction")
 	public String adminAddProductsAction(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		List<ProductType> productTypeList;
 		try {
 			request.setCharacterEncoding("UTF-8");
@@ -233,6 +271,8 @@ public class PlalashopController {
 	
 	@RequestMapping(value = "/adminSearchProducts")
 	public String adminSearchProducts(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		List<ProductType> productTypeList;
 		try {
 			request.setCharacterEncoding("UTF-8");
@@ -260,6 +300,8 @@ public class PlalashopController {
 	
 	@RequestMapping(value = "/adminDeleteProducts")
 	public String adminDeleteProducts(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		try {
 			request.setCharacterEncoding("UTF-8");
 			PlalaShopsService.deleteProducts(request.getParameter("productId"));
@@ -274,6 +316,8 @@ public class PlalashopController {
 	
 	@RequestMapping(value = "/adminShopEditProducts")
 	public String adminShopEditProducts(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		try {
 			request.setCharacterEncoding("UTF-8");
 			Product product = new Product();
@@ -294,6 +338,8 @@ public class PlalashopController {
 	}
 	@RequestMapping(value = "/editProductsAction")
 	public String editProductsAction(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		try {
 			request.setCharacterEncoding("UTF-8");
 			
@@ -329,6 +375,8 @@ public class PlalashopController {
 	
 	@RequestMapping(value = "/adminShopAddImageProducts")
 	public String adminShopAddImageProducts(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		try {
 			request.getSession().setAttribute("productId", request.getParameter("productId"));
 			request.setCharacterEncoding("UTF-8");
@@ -350,6 +398,8 @@ public class PlalashopController {
 	
 	@RequestMapping(value = "/uploadFileImage")
 	public String uploadFileImage(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		request.setCharacterEncoding("UTF-8");
 		String productId = (String) request.getSession().getAttribute("productId");
 		try {
@@ -412,6 +462,8 @@ public class PlalashopController {
 
 	@RequestMapping(value = "/deleteImageProduct")
 	public String deleteImageProduct(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		try {
 //			request.getSession().setAttribute("imageId", request.getParameter("imageId"));
 			request.setCharacterEncoding("UTF-8");
@@ -426,7 +478,7 @@ public class PlalashopController {
 			request.setAttribute("addImageProduct", product);
 			request.setAttribute(Utils.MENU_SELECT, "Products");
 			request.setAttribute("action", "addImageProduct");
-			List<ImgMapping> imageList = PlalaShopsService.getImgMapping(request.getParameter("productId"));
+			List<ImgMapping> imageList = PlalaShopsService.getImgMapping(productId);
 			request.setAttribute("imageList",imageList);
 			request.setAttribute("success", "Delete image success");
 		} catch (Exception e) {
@@ -447,6 +499,7 @@ public class PlalashopController {
 	
 	@RequestMapping(value = "/mobileHeader")
 	public String mobileHeader(HttpServletRequest request) {
+		
 		try {
 			request.setCharacterEncoding("UTF-8");
 		} catch (Exception e1) {
@@ -496,6 +549,8 @@ public class PlalashopController {
 	}
 	@RequestMapping(value = "/adminAdvertise")
 	public String adminAdvertise(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		try {
 			request.setAttribute("action", "");
 			request.setCharacterEncoding("UTF-8");
@@ -509,14 +564,21 @@ public class PlalashopController {
 	}
 	@RequestMapping(value = "/addAdvertise")
 	public String addAdvertise(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		try {
 			request.setCharacterEncoding("UTF-8");
 			request.setAttribute(Utils.MENU_SELECT, "Advertise");
 			String advertiseOwner = request.getParameter("advertiseOwner");
 			String linkAdvertise = request.getParameter("linkAdvertise");
 			String queue = request.getParameter("queue");
-			Long queueLong = queue != null && queue.length() > 0 ? Long.parseLong(queue) : null;
-			PlalaShopsService.insertAdvertise(new Advertise(advertiseOwner, linkAdvertise,queueLong));
+			if(advertiseOwner != null && advertiseOwner.length() > 0 && linkAdvertise != null && linkAdvertise.length() > 0){
+				Long queueLong = queue != null && queue.length() > 0 ? Long.parseLong(queue) : null;
+				PlalaShopsService.insertAdvertise(new Advertise(advertiseOwner, linkAdvertise,queueLong));
+				
+			}else{
+				request.setAttribute("Fail", "Advertise Owner And Link Advertise Is not empty");
+			}
 			List<Advertise> advertiseList = PlalaShopsService.getAdvertise(new Advertise());
 			request.setAttribute("advertiseList", advertiseList);
 		} catch (Exception e1) {
@@ -526,6 +588,8 @@ public class PlalashopController {
 	}
 	@RequestMapping(value = "/deleteAdvertise")
 	public String deleteAdvertise(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		try {
 			request.setCharacterEncoding("UTF-8");
 			request.setAttribute(Utils.MENU_SELECT, "Advertise");
@@ -558,6 +622,8 @@ public class PlalashopController {
 	}
 	@RequestMapping(value = "/editAdvertiseAction")
 	public String editAdvertiseAction(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		try {
 			request.setCharacterEncoding("UTF-8");
 			request.setAttribute(Utils.MENU_SELECT, "Advertise");
@@ -567,6 +633,7 @@ public class PlalashopController {
 			String queue = request.getParameter("queue");
 			Advertise advertise = new Advertise();
 			advertise.setAdvertiseId(Long.parseLong(id));
+			advertise = PlalaShopsService.getAdvertise(advertise).get(0);
 			advertise.setAdvertiseOwner(advertiseOwner);
 			advertise.setLinkAdvertise(linkAdvertise);
 			Long queueLong = queue != null && queue.length() > 0 ? Long.parseLong(queue) : null;
@@ -581,6 +648,8 @@ public class PlalashopController {
 	}
 	@RequestMapping(value = "/addImageAdvertise")
 	public String addImageAdvertise(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		try {
 			request.setAttribute(Utils.MENU_SELECT, "Advertise");
 			String id = request.getParameter("id");
@@ -598,6 +667,8 @@ public class PlalashopController {
 	
 	@RequestMapping(value = "/uploadFileAdvertise")
 	public String uploadFileAdvertise(HttpServletRequest request,HttpServletResponse response) throws Exception {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
 		request.setAttribute(Utils.MENU_SELECT, "Advertise");
 		request.setCharacterEncoding("UTF-8");
 		String id = (String) request.getSession().getAttribute("id");
@@ -651,5 +722,215 @@ public class PlalashopController {
         
         return adminAdvertise(request);
     }
+	
+	public String checkSession(HttpServletRequest request){
+		User user = (User)request.getSession().getAttribute(Utils.SESSION_USER_KEY);
+		if(user == null){
+			request.setAttribute("Fail", "Session Time out !");
+			request.setAttribute("message", "Session Time out !");
+			return "error";
+		}else{
+			return "";
+		}
+	}
+	
+	
+	@RequestMapping(value = "/loginApp")
+	public String loginApp(HttpServletRequest request)throws Exception{
+		request.setCharacterEncoding("UTF-8");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+		User user = new User();
+		user.setEmail(email);
+		user.setPassword(password);
+		List<User> userList = PlalaShopsService.getUserByUserObj(user);
+		if(userList != null && userList.size() > 0){
+			user = userList.get(0);
+			request.getSession().setAttribute(Utils.SESSION_USER_KEY,user );
+			return appHome(request);
+		}else{
+			return "login";
+		}
+	}
+	
+	@RequestMapping(value = "/registerAction")
+	public String registerAction(HttpServletRequest request) throws Exception{
+		request.setCharacterEncoding("UTF-8");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+		String userType = request.getParameter("userType");
+		String phone = request.getParameter("phone");
+		
+		User user = new User();
+		user.setUserLogin(email);
+		List<User> userList = PlalaShopsService.getUserByUserObj(user);
+		if(userList != null && userList.size() > 0){
+			request.setAttribute("message", "E-mail is no longer available.");
+			return "register";
+		}
+		user = new User();
+		user.setPhone(phone);
+		userList = PlalaShopsService.getUserByUserObj(user);
+		if(userList != null && userList.size() > 0){
+			request.setAttribute("message", "Mobile No is no longer available.");
+			return "register";
+		}
+		
+		user = new User();
+		user.setUserLogin(email);
+		user.setPhone(phone);
+		user.setEmail(email);
+		user.setRole("user");
+		user.setPassword(password);
+		user.setUserType(userType);
+		PlalaShopsService.insertUser(user);
+		return loginApp(request);
+	}
+	
+	@RequestMapping(value = "/appHome")
+	public String appHome(HttpServletRequest request)throws Exception{
+		request.setCharacterEncoding("UTF-8");
+		request.setAttribute("actionPage", "initHome");
+		
+		List<Advertise> advertiseList = PlalaShopsService.getAdvertise(new Advertise());
+		request.setAttribute("advertiseList", advertiseList);
+		
+		List<Product> productList = PlalaShopsService.getProductsByProductsObj(new Product());
+		request.setAttribute("productList", productList);
+		
+		return "mobileHeader";
+	}
+	
+	@RequestMapping(value = "/uploadFileProductType")
+	public String uploadFileProductType(HttpServletRequest request,HttpServletResponse response) throws Exception {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
+		request.setAttribute(Utils.MENU_SELECT, "ProductType");
+		request.setCharacterEncoding("UTF-8");
+		String id = (String) request.getSession().getAttribute("id");
+		ProductType productType = new  ProductType();
+		productType.setProductTypeId(new Long(id));
+		productType = PlalaShopsService.getProductTypeByProductTypeObj(productType).get(0);
+		request.setAttribute("productType", productType);
+		request.setAttribute("action", "uploadItem");
+        if (!ServletFileUpload.isMultipartContent(request)) {
+        	request.setAttribute("Fail", "Please Select File!");
+            return "adminProductType";
+        }
+        
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        factory.setSizeThreshold(MEMORY_THRESHOLD);
+        factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        upload.setFileSizeMax(MAX_FILE_SIZE);
+        upload.setSizeMax(MAX_REQUEST_SIZE);
+        String uploadPath = UPLOAD_DIRECTORY;
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
+        try {
+            @SuppressWarnings("unchecked")
+            List<FileItem> formItems = upload.parseRequest(request);
+            if (formItems != null && formItems.size() > 0) {
+                for (FileItem item : formItems) {
+                    if (!item.isFormField()) {
+                        String fileName = "IMG_"+(new Date().getTime())+(new File(item.getName()).getName());
+                        String extension = fileName.substring(fileName.lastIndexOf("."));
+                        if(".png".equalsIgnoreCase(extension)){
+	                        String filePath = uploadPath + fileName;
+	                        File storeFile = new File(filePath);
+	                        item.write(storeFile);
+	                        productType.setFileName(fileName);
+	                        PlalaShopsService.updateProductType(productType);
+	                        List<ProductType> productTypeList = new ArrayList<ProductType>();
+	                        productTypeList.add(productType);
+	                        request.setAttribute("productTypeList", productTypeList);
+	                        request.setAttribute("success", "Upload image success");
+	                        request.setAttribute("action", "");
+                        }else{
+                        	request.setAttribute("Fail", "File is not PNG");
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+            request.setAttribute("Fail", "Please Select File!");
+        }
+        
+        return "adminProductType";
+    }
+	
+	
+	@RequestMapping(value = "/appShop")
+	public String appShop(HttpServletRequest request)throws Exception{
+		request.setCharacterEncoding("UTF-8");
+		request.setAttribute("actionPage", "intiShop");
+		
+		List<ProductType> productTypeList = PlalaShopsService.getProductTypeByProductTypeObj(new ProductType());
+		request.setAttribute("productTypeList",productTypeList);
+		
+		return "mobileHeader";
+	}
+	
+	
+	@RequestMapping(value = "/gotoProductItem")
+	public String gotoProductItem(HttpServletRequest request)throws Exception{
+		request.setCharacterEncoding("UTF-8");
+		String productType = (String) request.getParameter("productType");
+		Product product = new Product();
+		product.setProductType(productType);
+		List<Product> productList = PlalaShopsService.getProductsByProductsObj(product);
+		request.setAttribute("actionPage", "intiItem");
+		
+		request.setAttribute("productList",productList);
+		
+		return "mobileHeader";
+	}
+	
+	@RequestMapping(value = "/showDetailItem")
+	public String showDetailItem(HttpServletRequest request)throws Exception{
+		request.setCharacterEncoding("UTF-8");
+		String id = (String) request.getParameter("id");
+		Product product = new Product();
+		product.setProductId(Long.parseLong(id));
+		product = PlalaShopsService.getProductsByProductsObj(product).get(0);
+		List<ImgMapping> imgList = PlalaShopsService.getImgMapping(id);
+		request.setAttribute("actionPage", "ShowDetail");
+		request.setAttribute("imgList", imgList);
+		request.setAttribute("product",product);
+		return "mobileHeader";
+	}
+	
+	
+	@RequestMapping(value = "/adminGroupProduct")
+	public String adminGroupProduct(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
+		request.setAttribute(Utils.MENU_SELECT, "GroupProduct");
+		return "adminGroupProduct";
+	}
+	
+	
+	@RequestMapping(value = "/getGroupProductList")
+	public String getGroupProductList(HttpServletRequest request) {
+		String sestionMsg = checkSession(request);
+		if("error".equals(sestionMsg))return "adminLoginAgen";
+		try {
+			request.setCharacterEncoding("UTF-8");
+			request.setAttribute(Utils.MENU_SELECT, "ProductType");
+			ProductType productType = new ProductType();
+			productType.setProductTypeName(request.getParameter("productType"));
+//			productType.setFormName(request.getParameter("fromName") != null && request.getParameter("fromName").toString().length() > 0 ? "Y" : "N");
+			List<ProductType> productTypeList = PlalaShopsService.getProductTypeByProductTypeObj(productType);
+			request.setAttribute("productTypeList", productTypeList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "adminProductType";
+	}
+
+	
 }
 

@@ -10,6 +10,7 @@ public class User {
 	private String email;
 	private String role;
 	private String userType;
+	private String phone;
 	
 	
 	public User(ResultSet resultSet){
@@ -21,6 +22,7 @@ public class User {
 				email = resultSet.getString("email");
 				role = resultSet.getString("role");
 				userType = resultSet.getString("user_type");
+				phone = resultSet.getString("mobile_no");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -66,6 +68,12 @@ public class User {
 	}
 	public void setUserType(String userType) {
 		this.userType = userType;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 	
 	

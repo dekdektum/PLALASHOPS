@@ -15,14 +15,13 @@ public class ValidateService {
 			return "Product Name is empty!";
 		}
 		
-		if(price == null || price.length() == 0){
-			return "Price is empty!";
-		}
+		
 		if(!Utils.isDouble(price)){
 			return "Price Invalit";
 		}
 		
 		if(salePrice == null || salePrice.length() == 0){
+			return "Sale Price is empty!";
 		}else{
 			if(!Utils.isDouble(salePrice)){
 				return "Sale Price Invalit";

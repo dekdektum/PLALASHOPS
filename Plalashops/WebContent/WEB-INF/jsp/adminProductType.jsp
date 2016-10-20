@@ -32,8 +32,10 @@ body {
 		List<ProductType> ProuctTypeList = (List<ProductType>)request.getAttribute("productTypeList"); 
 	 	String success = (String)request.getAttribute("success"); 
 	 	String fail = (String)request.getAttribute("Fail"); 
+	 	String action = (String)request.getAttribute("action"); 
+	 	ProductType productType = (ProductType)request.getAttribute("productType"); 
 	%>
-	<br/>
+ 	<br/>
 	<div id='productTypePage' align="center">
 		<div class="container" align="center">
 			<% if(success != null && success.length() > 0){ %>
@@ -53,8 +55,9 @@ body {
 						<br/>
 						<table border="0">
 							<tr>
-								<td align="right" width="30%"> <label for="productType">Product Type :&nbsp;&nbsp;</label></td>
-								<td width="70%"><input  type="text" class="form-control" id="productType" placeholder="Product Type" style="width: 250px" name="productType"></td>
+								<td align="right" width="20%"> <label for="productType">Product Type :&nbsp;&nbsp;</label></td>
+								<td width="50%"><input  type="text" class="form-control" id="productType" placeholder="Product Type" style="width: 250px" name="productType"></td>
+								<td width="30%" align="right"><label><input type="checkbox" name="fromName"> : ชื่อในสินค้า</label></td>
 							</tr>
 							<tr>
 								<td>&nbsp;</td>
@@ -83,6 +86,7 @@ body {
 							      <tr>
 							        <th>No</th>
 							        <th>Product Type</th>
+							        <th>Add Image</th>
 							        <th>Delete</th>
 							      </tr>
 							    </thead>
@@ -91,8 +95,14 @@ body {
 							      <tr>
 							        <td><%= i+1 %></td>
 							        <td><%= ProuctTypeList.get(i).getProductTypeName() %></td>
+							        <td><% if(ProuctTypeList.get(i).getFileName() != null && !"data:image/jpeg;base64,null".equals(ProuctTypeList.get(i).getFileName())){ %>
+					    					<a href="addImageProduct.html?id=<%= ProuctTypeList.get(i).getProductTypeId() %>"><img style="width: 200px" src='<%= ProuctTypeList.get(i).getFileName() %>'></a>
+							    		<%}else{%>
+							    			<a href="addImageProduct.html?id=<%= ProuctTypeList.get(i).getProductTypeId() %>"><button type="button" class="btn btn-info">Add Product Type</button></a>
+							    		<% } %>
+							    	</td>
 							        <td>
-							        	<a href="deleteProductType.html?productType=<%=ProuctTypeList.get(i).getProductTypeName() %>">
+							        	<a href="deleteProductType.html?productType=<%=ProuctTypeList.get(i).getProductTypeId() %>">
 							        		<img style="width: 25px;height: 25px" id='del<%=i %>' src="img/delete.png">
 							        	</a>
 							        </td>
@@ -108,6 +118,38 @@ body {
 				
 				
 			</form>
+			
+			<%if("uploadItem".equals(action)){%>
+					<div class="panel panel-default" style="width: 80%">
+					<div class="panel-heading" align="left">Product Type result list</div>
+					<br/>	
+					<br/>	
+					<br/>	
+					<div class="form-group" align="center">
+						<div class="table-responsive">
+							  <table class="table" style="width: 50%" border="0">
+							    <thead>
+							      <tr>
+							        <th>No</th>
+							        <th>Product Type</th>
+							      </tr>
+							    </thead>
+							    <tbody>
+							      <tr>
+							        <td>1</td>
+							        <td><%= productType.getProductTypeName() %></td>
+							      </tr>
+							    </tbody>
+							  </table>
+							  
+							  <form action="uploadFileProductType.html" method="post" enctype="multipart/form-data">
+									<input type="file" name="file" >
+									<button type="submit" class="btn btn-info">Upload Image</button>
+								</form>
+  						</div>
+					</div>
+				</div>
+				<%}%>
 		</div>
 	</div>
 </body>

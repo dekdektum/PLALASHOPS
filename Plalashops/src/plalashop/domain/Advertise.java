@@ -27,6 +27,8 @@ public class Advertise {
 		}
 	}
 	
+	
+	
 	public Advertise(String advertiseOwner,String linkAdvertise,Long queue) {
 		this.advertiseOwner = advertiseOwner;
 		this.linkAdvertise = linkAdvertise;

@@ -12,6 +12,7 @@ import java.util.List;
 import java.sql.PreparedStatement;
 
 import plalashop.domain.Advertise;
+import plalashop.domain.GroupProduct;
 import plalashop.domain.ImgMapping;
 import plalashop.domain.Product;
 import plalashop.domain.ProductType;
@@ -29,8 +30,10 @@ public class PlalaShopsService{
 		StringBuilder sql = new StringBuilder("select * from user u where 1=1 ");
 		sql.append(Utils.whereInjection(user.getUserLogin(), "user_login"));
 		sql.append(Utils.whereInjection(user.getPassword(), "password"));
+		sql.append(Utils.whereInjection(user.getEmail(), "email"));
 		sql.append(Utils.whereInjection(user.getRole(), "role"));
 		sql.append(Utils.whereInjection(user.getUserType(), "user_type"));
+		sql.append(Utils.whereInjection(user.getPhone(), "mobile_no"));
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
 		Connection connection = DriverManager.getConnection(host, userDb, pass);
 		Statement statement = connection.createStatement();
@@ -44,13 +47,14 @@ public class PlalaShopsService{
 	}
 	
 	
-	public static void insertProductType(String productTypeName) throws Exception{
+	public static void insertProductType(String productTypeName ,String fromName) throws Exception{
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
 		Connection connection = DriverManager.getConnection(host, userDb, pass);
-		String sql ="INSERT INTO plalashops.product_type (product_type_name)VALUES(?)";
+		String sql ="INSERT INTO plalashops.product_type (product_type_name,form_name)VALUES(?,?)";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		
 		statement.setString(1, productTypeName);
+		statement.setString(2, fromName);
 		statement.executeUpdate();
 	}
 	
@@ -58,6 +62,7 @@ public class PlalaShopsService{
 		StringBuilder sql = new StringBuilder("select * from plalashops.product_type p where 1 = 1 ");
 		sql.append(Utils.whereInjection(productType.getProductTypeId(), "product_type_id"));
 		sql.append(Utils.whereInjection(productType.getProductTypeName(), "product_type_name"));
+		sql.append(Utils.whereInjection(productType.getFormName(), "form_name"));
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
 		Connection connection = DriverManager.getConnection(host, userDb, pass);
 		Statement statement = connection.createStatement();
@@ -74,7 +79,7 @@ public class PlalaShopsService{
 	public static void deleteProductType(String productTypeName) throws Exception{
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
 		Connection connection = DriverManager.getConnection(host, userDb, pass);
-		String sql ="delete from plalashops.product_type where product_type_name = ? ";
+		String sql ="delete from plalashops.product_type where product_type_id = ? ";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setString(1, productTypeName);
 		statement.executeUpdate();
@@ -97,7 +102,7 @@ public class PlalaShopsService{
 	}
 	
 	public static List<Product> getProductsByProductsObj(Product product) throws Exception{
-		StringBuilder sql = new StringBuilder("select * from plalashops.products p where 1 = 1 ");
+		StringBuilder sql = new StringBuilder("SELECT *, (SELECT m.file_name FROM img_maping m WHERE m.product_id = p.product_id LIMIT 1) file_name FROM products p where 1 = 1 ");
 		sql.append(Utils.whereInjection(product.getProductId(), "product_id"));
 		sql.append(Utils.whereInjection(product.getProductNo(), "product_no"));
 		sql.append(Utils.whereInjection(product.getProductType(), "product_type"));
@@ -221,7 +226,7 @@ public class PlalaShopsService{
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setString(1, advertise.getAdvertiseOwner());
 		statement.setString(2, advertise.getLinkAdvertise());
-		statement.setLong(3, advertise.getQueue());
+		statement.setLong(3, advertise.getQueue() != null ? advertise.getQueue() : 999);
 		statement.executeUpdate();
 	}
 	
@@ -243,7 +248,96 @@ public class PlalaShopsService{
 		statement.setLong(5, advertise.getAdvertiseId());
 		statement.executeUpdate();
 	}
+	public static void updateProductType(ProductType productType) throws Exception{
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		StringBuilder sql = new StringBuilder();
+		sql.append(" UPDATE plalashops.product_type SET			");
+		sql.append(" product_type_name = ? ,  ");
+		sql.append(" file_name = ?                    ");
+		sql.append(" WHERE product_type_id = ?  ");
+		PreparedStatement statement = connection.prepareStatement(sql.toString());
+		statement.setString(1, productType.getProductTypeName());
+		statement.setString(2, productType.getFileName(1));
+		statement.setLong(3, productType.getProductTypeId());
+		statement.executeUpdate();
+	}
 	
-
+	public static void insertUser(User user) throws Exception{
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		String sql ="INSERT INTO plalashops.user (user_login, PASSWORD, email, role, user_type)VALUES(?, ?, ?, ?, ?) ";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, user.getUserLogin());
+		statement.setString(2, user.getPassword());
+		statement.setString(3, user.getEmail());
+		statement.setString(4, user.getRole());
+		statement.setString(5, user.getUserType());
+		statement.executeUpdate();
+	} 
+	
+	public static List<GroupProduct> getGroupProduct(GroupProduct groupProduct) throws Exception{
+		StringBuilder sql = new StringBuilder("SELECT * FROM group_product  WHERE 1 = 1 ");
+		sql.append(Utils.whereInjection(groupProduct.getGroupProductId(), "group_product_id"));
+		sql.append(Utils.whereInjection(groupProduct.getGroupName(), "group_name"));
+		sql.append(Utils.whereInjection(groupProduct.getFree1(), "free1"));
+		sql.append(Utils.whereInjection(groupProduct.getFree2(), "free2"));
+		sql.append(Utils.whereInjection(groupProduct.getFree3(), "free3"));
+		sql.append(" ORDER BY group_name");
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		Statement statement = connection.createStatement();
+		ResultSet resultSet = statement.executeQuery(sql.toString());
+		List<GroupProduct> groupProductList = new ArrayList<GroupProduct>();
+		while (resultSet.next()) {
+			groupProductList.add(new GroupProduct(resultSet));
+		}
+		connection.close();
+		return groupProductList;
+	}
+	
+	public static void insertGroupProduct(GroupProduct groupProduct) throws Exception{
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		String sql ="INSERT INTO plalashops.group_product(group_name,free1,free2,free3)VALUES(?,?,?,?) ";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, groupProduct.getGroupName());
+		statement.setString(2, groupProduct.getFree1());
+		statement.setString(3, groupProduct.getFree2());
+		statement.setString(4, groupProduct.getFree3());
+		statement.executeUpdate();
+	}
+	
+	
+	public static void updateGroupProduct(GroupProduct groupProduct) throws Exception{
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		StringBuilder sql = new StringBuilder();
+		sql.append(" UPDATE plalashops.group_product ");
+		sql.append(" SET group_name = ? ,            ");
+		sql.append(" file_name = ? ,                 ");
+		sql.append(" free1 =  ?,                     ");
+		sql.append(" free2 = ? ,                     ");
+		sql.append(" free3 = ?                       ");
+		sql.append(" WHERE                           ");
+		sql.append(" group_product_id = ?            ");
+		PreparedStatement statement = connection.prepareStatement(sql.toString());
+		statement.setString(1, groupProduct.getGroupName());
+		statement.setString(2, groupProduct.getFileName(1));
+		statement.setString(3, groupProduct.getFree1());
+		statement.setString(4, groupProduct.getFree2());
+		statement.setString(5, groupProduct.getFree3());
+		statement.setString(6, groupProduct.getFree3());
+		statement.executeUpdate();
+	}
+	
+	public static void deleteGroupProduct(String advertiseId) throws Exception{
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		String sql ="DELETE FROM plalashops.advertise WHERE advertise_id = ? ";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, advertiseId);
+		statement.executeUpdate();
+	}
 
 }

@@ -2,6 +2,11 @@ package plalashop.domain;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
+import plalashop.controller.PlalashopController;
+import plalashop.service.impl.PlalaShopsService;
+import plalashop.utils.Utils;
 
 public class Product {
 	private Long productId;
@@ -12,6 +17,7 @@ public class Product {
 	private Double salePrice;
 	private String description;
 	private String sex;
+	private String fileImage;
 	
 	
 	public Product(ResultSet resultSet){
@@ -25,6 +31,7 @@ public class Product {
 				salePrice = resultSet.getDouble("sale_price");
 				description = resultSet.getString("description");
 				sex = resultSet.getString("sex");
+				fileImage = resultSet.getString("file_name");
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -85,6 +92,18 @@ public class Product {
 	}
 	public void setSex(String sex) {
 		this.sex = sex;
+	}
+
+	public String getFileImage() throws Exception {
+		return Utils.convertImageToBase64(PlalashopController.UPLOAD_DIRECTORY+fileImage);
+	}
+
+	public void setFileImage(String fileImage) {
+		this.fileImage = fileImage;
+	}
+	
+	public int getDisCount(){
+		return (int) ((int)100-(salePrice * 100 / price));
 	}
 	
 	

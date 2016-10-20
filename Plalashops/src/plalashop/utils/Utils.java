@@ -32,7 +32,6 @@ public class Utils {
 	
 	
 	
-	
 	public static String getMenuByRole(String role){
 		StringBuilder str = new StringBuilder();
 
@@ -125,24 +124,7 @@ public class Utils {
         return imageString;
     }
 	
-	public static String convertImageToBase64(String imageUrlPath){	
-		if(imageUrlPath != null){
-			String encodedBytes = null;
-			try {
-				BASE64Encoder encoder = new BASE64Encoder();
-				java.io.File file = new java.io.File(imageUrlPath);
 	
-				byte[] filebyte = FileUtils.readFileToByteArray(file);
-					encodedBytes = encoder.encodeBuffer(filebyte);
-	
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return "data:image/jpeg;base64,"+encodedBytes;
-		}else{
-			return null;
-		}
-	}
 	
 	public static byte[] scale(byte[] fileData, int width, int height) throws IOException {
     	ByteArrayInputStream in = new ByteArrayInputStream(fileData);
@@ -167,7 +149,7 @@ public class Utils {
     		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     		
     		try {
-				ImageIO.write(imageBuff, "jpg", buffer);
+				ImageIO.write(imageBuff, "png", buffer);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -177,4 +159,26 @@ public class Utils {
 
     	return buffer.toByteArray();
     }
+	
+	public static String convertImageToBase64(String imageUrlPath){		 
+		String encodedBytes = null;
+		try {
+			BASE64Encoder encoder = new BASE64Encoder();
+			java.io.File file = new java.io.File(imageUrlPath);
+			double bytes = file.length();
+			double kilobytes = bytes / 1024;
+
+			byte[] filebyte = FileUtils.readFileToByteArray(file);
+			if (kilobytes > 50.00) {
+				byte[] fileImageConvertByte = scale(filebyte,125, 0);
+				encodedBytes = encoder.encodeBuffer(fileImageConvertByte);
+			} else {
+				encodedBytes = encoder.encodeBuffer(filebyte);
+			}
+			return "data:image/jpeg;base64,"+encodedBytes;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return encodedBytes;
+	}
 }
