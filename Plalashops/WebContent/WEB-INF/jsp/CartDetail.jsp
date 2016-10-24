@@ -77,7 +77,6 @@
 	   </form>
 	   <form id="jsSendForm" method="post">
 	   </form>
-<!-- 	</div>  -->
 </div>
 
 </body>
