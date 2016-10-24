@@ -47,7 +47,7 @@ div.party {
 
 
 </head>
-<body id='bg' background="img/bg.jpg">
+<body>
 <script type="text/javascript">
 	document.getElementById('bg').style["background-size"] = screen.width+'px '+screen.height+'px';
 </script>

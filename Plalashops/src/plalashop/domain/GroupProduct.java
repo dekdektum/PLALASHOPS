@@ -54,6 +54,7 @@ public class GroupProduct {
 
 
 	public String getFileName() {
+		
 		return Utils.convertImageToBase64(PlalashopController.UPLOAD_DIRECTORY+fileName);
 	}
 	public String getFileName(int i) {

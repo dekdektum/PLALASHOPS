@@ -18,6 +18,7 @@ public class Product {
 	private String description;
 	private String sex;
 	private String fileImage;
+	private String specialClass;
 	
 	
 	public Product(ResultSet resultSet){
@@ -32,6 +33,7 @@ public class Product {
 				description = resultSet.getString("description");
 				sex = resultSet.getString("sex");
 				fileImage = resultSet.getString("file_name");
+				specialClass = resultSet.getString("special_class");
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -104,6 +106,14 @@ public class Product {
 	
 	public int getDisCount(){
 		return (int) ((int)100-(salePrice * 100 / price));
+	}
+
+	public String getSpecialClass() {
+		return specialClass;
+	}
+
+	public void setSpecialClass(String specialClass) {
+		this.specialClass = specialClass;
 	}
 	
 	

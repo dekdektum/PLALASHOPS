@@ -53,7 +53,7 @@ div.party {
 
 
 </head>
-<body id='bg' background="img/bg.jpg">
+<body>
 <script type="text/javascript">
 	document.getElementById('bg').style["background-size"] = screen.width+'px '+screen.height+'px';
 </script>
@@ -189,7 +189,7 @@ div.party {
 				      
 				    </div>
 						
-						<div style="top: -50px;" id="special_price_area" class="col-xs-12 pull-left"  align="left">
+						<div id="special_price_area" class="col-xs-12 pull-left"  align="left">
 							<span style="float: left;">รหัสสินค้า   : </span> <span
 								class="price_erase"> <span id="product_code"><%= product.getProductNo() %>
 							</span>

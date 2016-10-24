@@ -8,6 +8,7 @@ import plalashop.utils.Utils;
 
 public class ProductType {
 	private Long productTypeId;
+	private Long groupProductId;
 	private String productTypeName;
 	private String fileName;
 	private String formName;
@@ -17,6 +18,7 @@ public class ProductType {
 		if(resultSet != null){
 			try {
 				productTypeId = resultSet.getLong("product_type_id");
+				groupProductId = resultSet.getLong("group_product_id");
 				productTypeName = resultSet.getString("product_type_name");
 				fileName = resultSet.getString("file_name");
 				formName = resultSet.getString("form_name");
@@ -56,6 +58,21 @@ public class ProductType {
 	public void setFormName(String formName) {
 		this.formName = formName;
 	}
+	public Long getGroupProductId() {
+		return groupProductId;
+	}
+	public void setGroupProductId(Long groupProductId) {
+		this.groupProductId = groupProductId;
+	}
+	public void setGroupProductId(String groupProductId) {
+		try {
+			this.groupProductId = Long.parseLong(groupProductId);
+		} catch (Exception e) {
+			this.groupProductId = null;
+		}
+	}
+	
+	
 	
 	
 }

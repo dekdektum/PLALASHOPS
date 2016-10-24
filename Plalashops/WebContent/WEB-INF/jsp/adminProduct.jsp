@@ -84,6 +84,15 @@ function insertProduct(){
 						        	<option value="Woman">หญิง</option>
 							      </select>
 						    </div>
+						    <div class="col-sm-6">
+						    	<label for="sex">Special Class</label>
+							      <select class="form-control" id="specialClass" name="specialClass" style="width: 80%">
+							      	<option value="">All</option>
+						        	<option value="promotion">สินค้าโปรโมชั่น</option>
+						        	<option value="hot">สินค้าขายดี</option>
+						        	<option value="food">อาหาร&เครื่องดื่ม</option>
+							      </select>
+						    </div>
 						</div>
 						<br/>
 						<button type="submit" class="btn btn-info">Search</button>
@@ -106,9 +115,22 @@ function insertProduct(){
 							      		<% } %>
 								      </select>
 							    </div>
+							    <div class="col-sm-6">
+							      	<label for="productNo">Product No</label>
+									<input  type="text" class="form-control" id="productNo" placeholder="Product No" style="width: 90%" name="productNo">
+							    </div>
 								<div class="col-sm-6">
 							      <label for="productName">Product Name</label>
 								  <input  type="text" class="form-control" id="productName" placeholder="Product Name" style="width: 90%" name="productName">
+							    </div>
+							    <div class="col-sm-6">
+							    	<label for="sex">Special Class</label>
+								      <select class="form-control" id="specialClass" name="specialClass" style="width: 90%">
+								      	<option value=""></option>
+							        	<option value="promotion">สินค้าโปรโมชั่น</option>
+							        	<option value="hot">สินค้าขายดี</option>
+							        	<option value="food">อาหาร&เครื่องดื่ม</option>
+								      </select>
 							    </div>
 							     <div class="col-sm-6">
 							      <label for="price">Price</label>
@@ -126,7 +148,6 @@ function insertProduct(){
 						        	<option value="Woman">หญิง</option>
 							      </select>
 							    </div>
-							    
 							     <div class="col-sm-12">
 							    	<div class="form-group">
 									  <label for="description">Description</label>
@@ -218,9 +239,22 @@ function insertProduct(){
 								      </select>
 								      
 							    </div>
+							    <div class="col-sm-6">
+							      	<label for="productNo">Product No</label>
+									<input  type="text" class="form-control" id="productNo" placeholder="Product No" style="width: 90%" name="productNo" value="<%= product.getProductNo() %>">
+							    </div>
 								<div class="col-sm-6">
 							      <label for="productName">Product Name</label>
 								  <input  type="text" class="form-control" id="productName" placeholder="Product Name" style="width: 90%" name="productName" value="<%= product.getProductName() %>">
+							    </div>
+							    <div class="col-sm-6">
+							    	<label for="sex">Special Class</label>
+								      <select class="form-control" id="editSpecialClass" name="specialClass" style="width: 90%" >
+								      	<option  value=""></option>
+							        	<option value="promotion">สินค้าโปรโมชั่น</option>
+							        	<option value="hot">สินค้าขายดี</option>
+							        	<option value="food">อาหาร&เครื่องดื่ม</option>
+								      </select>
 							    </div>
 							     <div class="col-sm-6">
 							      <label for="price">Price</label>
@@ -247,11 +281,12 @@ function insertProduct(){
 							    <br>
 							</div>
 							   <button type="submit" class="btn btn-info">Edit Product</button>
-							   <button type="button" class="btn btn-info">Cancel</button>
+							   <button type="button" class="btn btn-info" onclick="window.history.back();">Cancel</button>
 						</div>
 						<script type="text/javascript">
 					      	document.getElementById('editProducrType').value = '<%= product.getProductType() %>';
-					      	document.getElementById('editSex').value = '<%= product.getSex().equals("")? "All" : product.getSex() %>';
+					      	document.getElementById('editSex').value = '<%= product.getSex() == null || "".equals(product.getSex())? "" : product.getSex() %>';
+					      	document.getElementById('editSpecialClass').value = '<%= product.getSpecialClass() %>';
 					    </script>
 					</form>
 				</div>

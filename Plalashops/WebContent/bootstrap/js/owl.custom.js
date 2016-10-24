@@ -14,9 +14,9 @@ $(document).ready(function() {
 		$(this).owlCarousel({ 
 			rewindNav : false,	
 			navigation : true,
-			items : 6,  
-			itemsDesktop : [1200,6], 
-			itemsDesktopSmall : [970,4],  
+			items : 3,  
+			itemsDesktop : [1200,3], 
+			itemsDesktopSmall : [970,3],  
 			itemsTablet: [414,2], 
 			itemsMobile : [375,2]
 		});

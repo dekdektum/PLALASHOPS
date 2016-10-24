@@ -146,10 +146,14 @@
 		String actionPage = (String) request.getAttribute("actionPage");
 		List<Advertise> advertiseList = (List<Advertise>) request.getAttribute("advertiseList");
 		List<Product> productList = (List<Product>) request.getAttribute("productList");
+		List<Product> promotionProductList = (List<Product>) request.getAttribute("promotionProductList");
+		List<Product> hotProductList = (List<Product>) request.getAttribute("hotProductList");
+		List<Product> foodProductList = (List<Product>) request.getAttribute("foodProductList");
+		List<Product> newProductList = (List<Product>) request.getAttribute("newProductList");
 	
 	%>
 <div class="container">
-	<form action="register.html" method="Post">
+	<form method="Post">
 		<div class="form-group" align="center">
 			<div class="row">
 					<div id="jssor_1" style="position: relative; margin: 0 auto; top: 0px; left: 0px; width: 1300px; height: 500px; overflow: hidden; visibility: hidden;">
@@ -170,30 +174,105 @@
 				            <div data-u="prototype" style="width:30px;height:30px;"></div>
 				        </div>
 				    </div>
-				    <div class="product-box-inner">
-				    	<div id="product-slide0" class="owl-carousel owl-theme">
-				    	<% for(Product product: productList){ 
-				    	if(product.getFileImage() != null){%>
-				            <div class="thumbnail" style="width: 100%;margin-bottom: 0px;">
-						   		<img class="img-rounded"  src="<%= product.getFileImage() %>"/>
-				                <div class="caption">
-				                    <h4 class="group inner list-group-item-heading"><%= product.getProductName() %></h4>
-				                    <div class="row">
-				                        <div class="col-sm-6 ">
-				                        <%if(product.getPrice() > 0 ){ %>
-				                            <p class="lead"><strike>฿<%= product.getPrice() %></strike> Dis. <B style="color: red;">฿<%= product.getSalePrice() %><br>ลดถึง  <%= product.getDisCount() %>%</B></p>
-				                        <%}else{ %>
-				                            <p class="lead"><br><B style="color: red;">฿<%= product.getSalePrice() %></B></p>
-				                        <%} %>
-				                        </div>
-				                    </div>
-				                </div>
-				            </div>
-					<%	} 
-					} %>
-               		</div>
-		         </div>
-			
+				    <%if(promotionProductList != null && promotionProductList.size() > 0){ %>
+				    <div class="panel panel-default" style="margin-bottom: 0px">
+   	 					<div class="panel-heading" align="left">สินค้าโปรโมชั่น</div>
+						    <div class="product-box-inner">
+						    	<div id="product-slide0" class="owl-carousel owl-theme">
+						    	<% for(Product product: promotionProductList){ 
+						    	if(product.getFileImage() != null){%>
+						            <div class="thumbnail" style="width: 100%;margin-bottom: 0px;">
+								   		<img class="img-rounded"  src="<%= product.getFileImage() %>"/>
+						                <div class="caption">
+						                    <h4 class="group inner list-group-item-heading"><%= product.getProductName() %></h4>
+						                        <%if(product.getPrice() > 0 ){ %>
+						                            <p><strike>฿<%= product.getPrice() %></strike> Dis. <B style="color: red;">฿<%= product.getSalePrice() %><br>ลดถึง  <%= product.getDisCount() %>%</B></p>
+						                        <%}else{ %>
+						                            <p><br><B style="color: red;">฿<%= product.getSalePrice() %></B></p>
+						                        <%} %>
+						                </div>
+						            </div>
+							<%	} 
+							} %>
+		               		</div>
+				         </div>
+					</div>
+					<%} 
+					if(hotProductList != null && hotProductList.size() > 0){%>
+				    <div class="panel panel-default" style="margin-bottom: 0px">
+   	 					<div class="panel-heading" align="left">สินค้าขายดี</div>
+						    <div class="product-box-inner">
+						    	<div id="product-slide0" class="owl-carousel owl-theme">
+						    	<% for(Product product: hotProductList){ 
+						    	if(product.getFileImage() != null){%>
+						            <div class="thumbnail" style="width: 100%;margin-bottom: 0px;">
+								   		<img class="img-rounded"  src="<%= product.getFileImage() %>"/>
+						                <div class="caption">
+						                    <h4 class="group inner list-group-item-heading"><%= product.getProductName() %></h4>
+						                        <%if(product.getPrice() > 0 ){ %>
+						                            <p><strike>฿<%= product.getPrice() %></strike> Dis. <B style="color: red;">฿<%= product.getSalePrice() %><br>ลดถึง  <%= product.getDisCount() %>%</B></p>
+						                        <%}else{ %>
+						                            <p><br><B style="color: red;">฿<%= product.getSalePrice() %></B></p>
+						                        <%} %>
+						                    </div>
+						                </div>
+						            </div>
+							<%	} 
+							} %>
+		               		</div>
+				         </div>
+					</div>
+					<%}
+					
+					if(newProductList != null && newProductList.size() > 0){%>
+				    <div class="panel panel-default" style="margin-bottom: 0px">
+   	 					<div class="panel-heading" align="left">สินค้าใหม่</div>
+						    <div class="product-box-inner">
+						    	<div id="product-slide0" class="owl-carousel owl-theme">
+						    	<% for(Product product: newProductList){ 
+						    	if(product.getFileImage() != null){%>
+						            <div class="thumbnail" style="width: 100%;margin-bottom: 0px;">
+								   		<img class="img-rounded"  src="<%= product.getFileImage() %>"/>
+						                <div class="caption">
+						                    <h4 class="group inner list-group-item-heading"><%= product.getProductName() %></h4>
+						                        <%if(product.getPrice() > 0 ){ %>
+						                            <p><strike>฿<%= product.getPrice() %></strike> Dis. <B style="color: red;">฿<%= product.getSalePrice() %><br>ลดถึง  <%= product.getDisCount() %>%</B></p>
+						                        <%}else{ %>
+						                            <p><br><B style="color: red;">฿<%= product.getSalePrice() %></B></p>
+						                        <%} %>
+						                </div>
+						            </div>
+							<%	} 
+							} %>
+		               		</div>
+				         </div>
+					</div>
+					<%}
+					
+					if(foodProductList != null && foodProductList.size() > 0){%>
+				    <div class="panel panel-default" style="margin-bottom: 0px">
+   	 					<div class="panel-heading" align="left">อาหารและเครื่องดื่ม</div>
+						    <div class="product-box-inner">
+						    	<div id="product-slide0" class="owl-carousel owl-theme">
+						    	<% for(Product product: foodProductList){ 
+						    	if(product.getFileImage() != null){%>
+						            <div class="thumbnail" style="width: 100%;margin-bottom: 0px;">
+								   		<img class="img-rounded"  src="<%= product.getFileImage() %>"/>
+						                <div class="caption">
+						                    <h4 class="group inner list-group-item-heading"><%= product.getProductName() %></h4>
+						                        <%if(product.getPrice() > 0 ){ %>
+						                            <p><strike>฿<%= product.getPrice() %></strike> Dis. <B style="color: red;">฿<%= product.getSalePrice() %><br>ลดถึง  <%= product.getDisCount() %>%</B></p>
+						                        <%}else{ %>
+						                            <p><br><B style="color: red;">฿<%= product.getSalePrice() %></B></p>
+						                        <%} %>
+						                </div>
+						            </div>
+							<%	} 
+							} %>
+		               		</div>
+				         </div>
+					</div>
+					<%} %>
 			</div>
 		</div>
 	</form>

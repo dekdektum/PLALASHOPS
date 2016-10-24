@@ -15,7 +15,10 @@ import org.apache.commons.io.FileUtils;
 
 import sun.misc.BASE64Encoder;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 public class Utils {
+	
 	public static final String USERNAME = "username";
 	public static final String PASSWORD = "password";
 
@@ -27,8 +30,21 @@ public class Utils {
 	
 	private static String dateReProductNo = "0000000";
 	private static int runingProductNo = 0;
+	private static Map<String,String> memImg;
 	
-	
+	public static <K, V> Map<K, V> createLRUMap(final int maxEntries) {
+	    return new LinkedHashMap<K, V>(maxEntries*10/7, 0.7f, true) {
+	        /**
+			 * 
+			 */
+			private static final long serialVersionUID = -3932497274912833803L;
+
+			@Override
+	        protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+	            return size() > maxEntries;
+	        }
+	    };
+	}
 	
 	
 	
@@ -160,7 +176,17 @@ public class Utils {
     	return buffer.toByteArray();
     }
 	
-	public static String convertImageToBase64(String imageUrlPath){		 
+	public static String convertImageToBase64(String imageUrlPath){	
+		if(imageUrlPath!= null && imageUrlPath.length() > 0 && "null".equals(imageUrlPath.substring(imageUrlPath.length()-4))){
+			return null;
+		}
+		if(memImg == null){
+			memImg = createLRUMap(500);
+		}
+		String img = memImg.get(imageUrlPath);
+		if(img != null){
+			return img;
+		}
 		String encodedBytes = null;
 		try {
 			BASE64Encoder encoder = new BASE64Encoder();
@@ -169,13 +195,15 @@ public class Utils {
 			double kilobytes = bytes / 1024;
 
 			byte[] filebyte = FileUtils.readFileToByteArray(file);
-			if (kilobytes > 50.00) {
-				byte[] fileImageConvertByte = scale(filebyte,125, 0);
+			if (kilobytes > 200.00) {
+				byte[] fileImageConvertByte = scale(filebyte,200, 0);
 				encodedBytes = encoder.encodeBuffer(fileImageConvertByte);
 			} else {
 				encodedBytes = encoder.encodeBuffer(filebyte);
 			}
-			return "data:image/jpeg;base64,"+encodedBytes;
+			encodedBytes = "data:image/jpeg;base64,"+encodedBytes;
+			memImg.put(imageUrlPath, encodedBytes);
+			return encodedBytes;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

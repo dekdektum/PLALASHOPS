@@ -30,6 +30,7 @@ body {
 	<jsp:include page="adminMenu.jsp" />
 	<% 
 		List<ProductType> ProuctTypeList = (List<ProductType>)request.getAttribute("productTypeList"); 
+		List<GroupProduct> groupProductList = (List<GroupProduct>)request.getAttribute("groupProductList"); 
 	 	String success = (String)request.getAttribute("success"); 
 	 	String fail = (String)request.getAttribute("Fail"); 
 	 	String action = (String)request.getAttribute("action"); 
@@ -54,6 +55,23 @@ body {
 					<div class="form-group" align="center">
 						<br/>
 						<table border="0">
+							<tr>
+							
+							      
+								<td><label for="producrType">Product Type</label></td>
+								<td>
+									<select class="form-control" id="groupProduct" name="groupProduct" style="width: 80%">
+								      <option value="">All</option>
+								      	<% for(GroupProduct groupProduc :groupProductList){ %>
+								        	<option value="<%=groupProduc.getGroupProductId() %>"><%=groupProduc.getGroupName() %></option>
+								       <% } %>
+								    </select>
+							    </td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td>
+							</tr>
 							<tr>
 								<td align="right" width="20%"> <label for="productType">Product Type :&nbsp;&nbsp;</label></td>
 								<td width="50%"><input  type="text" class="form-control" id="productType" placeholder="Product Type" style="width: 250px" name="productType"></td>

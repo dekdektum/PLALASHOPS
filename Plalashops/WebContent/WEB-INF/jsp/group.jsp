@@ -22,9 +22,9 @@
 }
   </style>
   <script type="text/javascript">
-  	function selectProductType(productType){
-  		document.getElementById('productType').value = productType;
-		document.forms["jsSendFormShop"].submit();
+  	function selectGroupProduct(groupProduct){
+  		document.getElementById('groupProduct').value = groupProduct;
+		document.forms["jsSendFormGroup"].submit();
   	}
   </script>
 </head>
@@ -35,17 +35,17 @@
       
 <%
 	String actionPage = (String) request.getAttribute("actionPage");
-	List<ProductType> productTypeList = (List<ProductType>) request.getAttribute("productTypeList");
+	List<GroupProduct> groupProductList = (List<GroupProduct>) request.getAttribute("groupProductList");
 
 %>
 <div class="container">
 		<div class="form-group" align="center">
 			<div class="row">
-				    <% for(ProductType productType :productTypeList){ %>
+				    <% for(GroupProduct groupProduct :groupProductList){ %>
 					 <div class="col-lg-3 col-md-4 col-xs-6 thumb  padding-0">
-					 	<div onclick="selectProductType('<%=productType.getProductTypeName() %>')" class="thumbnail" style="margin-bottom: 0px">
-					 	<%= productType.getProductTypeName() %>
-		   			     	<img class="img-rounded" src="<%=productType.getFileName() %>" border="1"/>
+					 	<div onclick="selectGroupProduct('<%=groupProduct.getGroupProductId() %>')" class="thumbnail" style="margin-bottom: 0px">
+					 	<%= groupProduct.getGroupName() %>
+		   			     	<img class="img-rounded" src="<%=groupProduct.getFileName() %>" border="1"/>
 		   			     </div>
 		            </div>
 		            <%} %>
@@ -54,8 +54,8 @@
 			</div>
 		</div>
 </div>
-<form id="jsSendFormShop" method="post" action="gotoProductItem.html">
-	<input type="hidden" id="productType" name="productType">
+<form id="jsSendFormGroup" method="post" action="appShop.html">
+	<input type="hidden" id="groupProduct" name="groupProduct">
 </form>
 
 </body>

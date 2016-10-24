@@ -139,6 +139,8 @@ footer {
 <div class="container-fluid body-content">
 	<% if(actionPage.indexOf("Home")>= 0){ %>
 		<jsp:include page="home.jsp" />
+	<% }else if(actionPage.indexOf("Group")>= 0){%>
+		<jsp:include page="group.jsp" />
 	<% }else if(actionPage.indexOf("Shop")>= 0){%>
 		<jsp:include page="shops.jsp" />
 	<% }else if(actionPage.indexOf("Item")>= 0){%>
@@ -162,7 +164,7 @@ footer {
 		<div class="col-xs-3" align="center">
 		      <div id="custom-search-input" >
 			       <div>
-          			<span onclick="jsSendForm('appShop.html')">
+          			<span onclick="jsSendForm('appGroup.html')">
           				<img src="img/icon-shop<%=actionPage.indexOf("Shop") >= 0  ? "2" : "1" %>.png" height="50px">
           			</span>
         		  </div>
