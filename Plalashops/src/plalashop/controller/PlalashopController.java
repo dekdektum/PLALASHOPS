@@ -769,6 +769,9 @@ public class PlalashopController {
 		if(userList != null && userList.size() > 0){
 			user = userList.get(0);
 			request.getSession().setAttribute(Utils.SESSION_USER_KEY,user );
+			request.setAttribute("islogin", "true");
+			request.setAttribute("username", email);
+			request.setAttribute("password", password);
 			return appHome(request);
 		}else{
 			return "login";
