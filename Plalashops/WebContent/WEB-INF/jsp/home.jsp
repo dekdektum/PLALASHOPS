@@ -32,7 +32,7 @@
 }
   </style>
   <script type="text/javascript">
-  function jsSendFormItem(id){
+	function jsSendFormItem(id){
 		document.getElementById('id').value = id;
 		document.forms["jsSendFormItem"].submit();
 	}
@@ -144,6 +144,8 @@
     </style>
 <%
 		String actionPage = (String) request.getAttribute("actionPage");
+		String username = (String) request.getAttribute("username");
+		String password = (String) request.getAttribute("password");
 		List<Advertise> advertiseList = (List<Advertise>) request.getAttribute("advertiseList");
 		List<Product> productList = (List<Product>) request.getAttribute("productList");
 		List<Product> promotionProductList = (List<Product>) request.getAttribute("promotionProductList");
@@ -152,6 +154,12 @@
 		List<Product> newProductList = (List<Product>) request.getAttribute("newProductList");
 	
 	%>
+	<% if(username != null && username.length() > 0 && password != null && password.length() > 0){ %>
+		<script type="text/javascript">
+			localStorage.setItem('username','<%= username %>');
+			localStorage.setItem('password','<%= password %>');
+		</script>
+	<% } %>
 <div class="container">
 	<form method="Post">
 		<div class="form-group" align="center">
@@ -181,7 +189,7 @@
 						    	<div id="product-slide0" class="owl-carousel owl-theme">
 						    	<% for(Product product: promotionProductList){ 
 						    	if(product.getFileImage() != null){%>
-						            <div class="thumbnail" style="width: 100%;margin-bottom: 0px;">
+						            <div class="thumbnail" style="width: 100%;margin-bottom: 0px;" onclick="jsSendFormItem('<%= product.getProductId() %>');">
 								   		<img class="img-rounded"  src="<%= product.getFileImage() %>"/>
 						                <div class="caption">
 						                    <h4 class="group inner list-group-item-heading"><%= product.getProductName() %></h4>
@@ -205,7 +213,7 @@
 						    	<div id="product-slide0" class="owl-carousel owl-theme">
 						    	<% for(Product product: hotProductList){ 
 						    	if(product.getFileImage() != null){%>
-						            <div class="thumbnail" style="width: 100%;margin-bottom: 0px;">
+						            <div class="thumbnail" style="width: 100%;margin-bottom: 0px;" onclick="jsSendFormItem('<%= product.getProductId() %>');">
 								   		<img class="img-rounded"  src="<%= product.getFileImage() %>"/>
 						                <div class="caption">
 						                    <h4 class="group inner list-group-item-heading"><%= product.getProductName() %></h4>
@@ -231,7 +239,7 @@
 						    	<div id="product-slide0" class="owl-carousel owl-theme">
 						    	<% for(Product product: newProductList){ 
 						    	if(product.getFileImage() != null){%>
-						            <div class="thumbnail" style="width: 100%;margin-bottom: 0px;">
+						            <div class="thumbnail" style="width: 100%;margin-bottom: 0px;" onclick="jsSendFormItem('<%= product.getProductId() %>');">
 								   		<img class="img-rounded"  src="<%= product.getFileImage() %>"/>
 						                <div class="caption">
 						                    <h4 class="group inner list-group-item-heading"><%= product.getProductName() %></h4>
@@ -256,7 +264,7 @@
 						    	<div id="product-slide0" class="owl-carousel owl-theme">
 						    	<% for(Product product: foodProductList){ 
 						    	if(product.getFileImage() != null){%>
-						            <div class="thumbnail" style="width: 100%;margin-bottom: 0px;">
+						            <div class="thumbnail" style="width: 100%;margin-bottom: 0px;" onclick="jsSendFormItem('<%= product.getProductId() %>');">
 								   		<img class="img-rounded"  src="<%= product.getFileImage() %>"/>
 						                <div class="caption">
 						                    <h4 class="group inner list-group-item-heading"><%= product.getProductName() %></h4>

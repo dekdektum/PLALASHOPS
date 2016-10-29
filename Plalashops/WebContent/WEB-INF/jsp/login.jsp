@@ -18,14 +18,29 @@
 
 </head>
 <body id='bg'>
+<form id="jsSendForm" method="post">
+	<input type="hidden" id="autoEmail" name="email">
+	<input type="hidden" id="autoPass" name="password">
+</form>
+<detailLabel>
 <script type="text/javascript">
-		document.getElementById('bg').style["background-size"] = screen.width+'px '+screen.height+'px';
+	var username = localStorage.getItem('username');
+	var password = localStorage.getItem('password');
+	if(username != null && username != '' && username != 'null' && password != null && password != '' && password != 'null'){
+		document.forms["jsSendForm"].action = 'loginApp.html';
+		localStorage.setItem('username','');
+		localStorage.setItem('password','');
+		document.getElementById('autoEmail').value = username;
+		document.getElementById('autoPass').value = password;
+		document.forms["jsSendForm"].submit();
+	}
+	document.getElementById('bg').style["background-size"] = screen.width+'px '+screen.height+'px';
 </script>
 <div id="main" class="container" style="width : 75% ;">
 	<div class="container" style="height: 45%;margin-top: 30%;">
 	  <img src="img/logo.png" class="center-block" alt="Cinque Terre" width="90%" height="90%">
 	</div>
-	<form action="loginApp.html" method="Post" style="margin-top: 20%">
+	<form id="loginForm" action="loginApp.html" method="Post" style="margin-top: 20%">
 		<div class="form-group" align="center">
 			  <div class ="row">
 				  <div class="col-xs-12" style="margin-top: 5%">
@@ -61,11 +76,9 @@
 			  </div>	 	
 		  </div>
 	   </form>
-	   <form id="jsSendForm" method="post">
-	   </form>
 <!-- 	</div>  -->
 </div>
-
+</detailLabel>
 </body>
 </html>
 

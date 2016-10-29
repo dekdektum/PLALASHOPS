@@ -9,19 +9,13 @@
 <%@ page import="java.io.*" %>
 <meta name="viewport" content="width=device-width, initial-scale=1,initial-scale=1.0, user-scalable=no ">
 <!-- ไม่ให้ซูม -->
-<meta name="viewport"
-	content="width=device-width, initial-scale=1,initial-scale=1.0, user-scalable=no ">
-<link rel="stylesheet"
-	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script
-	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1,initial-scale=1.0, user-scalable=no ">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="bootstrap/js/jquery-1.11.3.min.js" type="text/javascript"></script>
-    <script src="bootstrap/js/jssor.slider-21.1.6.mini.js" type="text/javascript"></script>
-<script type="text/javascript">
-  
-  </script>
+<script src="bootstrap/js/jssor.slider-21.1.6.mini.js" type="text/javascript"></script>
+
 
 <style type="text/css">
 
@@ -165,72 +159,104 @@ div.party {
     
 	<div class="container" style="width: 90%">
 <!-- 		<div class="panel panel-default"> -->
-			<br> <br>
-			<form action="register.html" method="Post">
+			<br> 
+			<form method="Post">
 				<div  class="form-group" align="center">
-					<div class="row">
-						<del class="col-xs-4">
-							<label class="control-label col-xs-12"><%= product.getProductType() %></label>
-						</del>
+						<table style="width: 100%" border="0">
+							<tr>
+								<td style="width: 5%"></td>
+								<td align="left">
+									<detailLabel class="col-xs-12"><%= product.getProductType() %></detailLabel>
+								</td>
+								<td style="width: 5%"></td>
+							</tr>
+							<tr>
+							<td style="width: 5%"></td>
+								<td>
+									 <div  id="jssor_1" style="position: relative; margin: 0 auto; top: 0px; left: 0px; width: 200px; height: 200px; overflow: hidden; visibility: hidden;">
+								        <!-- Loading Screen -->
+								        <div data-u="loading" style="position: absolute; top: 0px; left: 0px;">
+								            <div style="filter: alpha(opacity=70); opacity: 0.7; position: absolute; display: block; top: 0px; left: 0px; width: 100%; height: 100%;"></div>
+								            <div style="position:absolute;display:block;background:url('img/loading.gif') no-repeat center center;top:0px;left:0px;width:100%;height:100%;"></div>
+								        </div>
+								        <div  data-u="slides" style="cursor: default; position: relative; top: 0px; right: 12px; width: 175px; height: 175px; overflow: hidden;">
+											<%for(ImgMapping iMapping : imgList){ %>
+									            <div data-p="225.00" style="display: none;">
+									                <img data-u="image" src="<%= iMapping.getFileName() %>" />
+									            </div>
+								            <%} %>
+								        </div>
+								      
+								    </div>
+								</td>
+								<td style="width: 5%"></td>
+							</tr>
+						</table>
 
-					    <div  id="jssor_1" style="position: relative; margin: 0 auto; top: 0px; left: 0px; width: 200px; height: 200px; overflow: hidden; visibility: hidden;">
-				        <!-- Loading Screen -->
-				        <div data-u="loading" style="position: absolute; top: 0px; left: 0px;">
-				            <div style="filter: alpha(opacity=70); opacity: 0.7; position: absolute; display: block; top: 0px; left: 0px; width: 100%; height: 100%;"></div>
-				            <div style="position:absolute;display:block;background:url('img/loading.gif') no-repeat center center;top:0px;left:0px;width:100%;height:100%;"></div>
-				        </div>
-				        <div  data-u="slides" style="cursor: default; position: relative; top: 0px; right: 25px; width: 150px; height: 150px; overflow: hidden;">
-							<%for(ImgMapping iMapping : imgList){ %>
-					            <div data-p="225.00" style="display: none;">
-					                <img data-u="image" src="<%= iMapping.getFileName() %>" />
-					            </div>
-				            <%} %>
-				        </div>
-				      
-				    </div>
-						
-						<div id="special_price_area" class="col-xs-12 pull-left"  align="left">
-							<span style="float: left;">รหัสสินค้า   : </span> <span
-								class="price_erase"> <span id="product_code"><%= product.getProductNo() %>
-							</span>
-							</span> <BR> <span style="float: left;">ราคาปกติ  : </span> <span
-								class="price_erase"> <span id="price_box"><strike><%= product.getPrice() %>บาท </strike> <B style="color: red;"> &nbsp; ลดทันที <%= product.getDisCount() %></B></span>
-							</span> <BR> <span style="float: left;">ขาย  : </span> <span
-								class="price_erase"> <span id="price_box"><B style="color: red;"><%= product.getSalePrice() %> บาท</B>&nbsp;ประหยัดไปถึง <%= product.getPrice() - product.getSalePrice() %></span>
-							</span> <BR> <span style="float: left;">รายละเอียด :</span> <span
-								class="price_erase"> <span id="detail"><%=product.getDescription() %></span>
-							</span>
-							
-							<div align="left">
-								<span style="float: left;">จำนวน : </span>
-								<table border="0" >
+					   
+						<detailLabel id="special_price_area"  align="left">
+							<table style="width: 100%" border="0">
 								<tr>
-									<td align="right">
-										<span class="input-group-btn">
-											<button type="button" class="btn btn-link btn-number" onclick="del();" data-type="minus" data-field="quant[1]">
-												<span class="glyphicon glyphicon-minus"></span>
-											</button>
-										</span> 
-									</td>
-									<td style="width: 40%"><input type="number" id="qty" class="form-control input-number" value="1" min="1" max="10"></td>
-									<td align="left">
-										<span class="input-group-btn">
-										<button type="button" class="btn btn-link btn-number" onclick="add();" data-type="plus" data-field="quant[1]">
-											<span class="glyphicon glyphicon-plus"></span>
-										</button>
-										</span>
-									
+									<td style="width: auto;">
+										<span style="float: left;">รหัสสินค้า   :&nbsp; </span>
+										<div class="price_erase" align="left"> <%= product.getProductNo() %> </div>
 									</td>
 								</tr>
-								</table>
-							</div>
-
+								<tr>
+									<td style="width: auto;">
+										<detailLabel style="float: left;">ราคา  :&nbsp; </detailLabel> 
+										<span id="price_box">
+											<strike><%= product.getPrice() %>บาท </strike> 
+											<B style="color: red;"> &nbsp; ลดทันทีเหลือ  &nbsp;<B style="color: red;"><%= product.getSalePrice() %> บาท</B> </B>
+										</span> 
+									</td>
+								</tr>
+								<tr>
+									<td>
+										รายละเอียด 
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<%=product.getDescription() %>
+									</td>
+								</tr>
+								<tr>
+									<td style="vertical-align: middle;">
+										<table border="0" >
+											<tr>
+												<td>
+													<span style="float: left;" >จำนวน : </span>
+												
+												</td>
+												<td align="right">
+													<span class="input-group-btn">
+														<button type="button" class="btn btn-link btn-number" onclick="del();" data-type="minus" data-field="quant[1]">
+															<span class="glyphicon glyphicon-minus"></span>
+														</button>
+													</span> 
+												</td>
+												<td style="width: 40%"><input type="number" id="qty" class="form-control input-number" value="1" min="1" max="10" style="color: #1C6785;text-align: center;" ></td>
+												<td align="left">
+													<span class="input-group-btn">
+													<button type="button" class="btn btn-link btn-number" onclick="add();" data-type="plus" data-field="quant[1]">
+														<span class="glyphicon glyphicon-plus"></span>
+													</button>
+													</span>
+												
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+										
+							</table>
 							<br>
-						     <div align="center">
+					     	<div align="center">
 								<button type="submit" class="btn btn-default btn-lg">ซื้อ</button>
-							</div>	
-						</div>
-			
+							</div>
+						</detailLabel>
+						
 					</div>
 				</div>
 			</form>
@@ -247,7 +273,6 @@ $(document).ready(function() {
    });
 });
 </script>
-	
 	
 </body>
 </html>

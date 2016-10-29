@@ -18,6 +18,7 @@
 		document.forms["jsSendForm"].action = page;
 		document.forms["jsSendForm"].submit();
 	}
+	 
 </script>
 <style type="text/css">
 html {
