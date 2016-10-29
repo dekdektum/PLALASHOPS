@@ -1150,7 +1150,7 @@ public class PlalashopController {
 	   }  
 
 	   return "point" ;  
-	  }
+	  } 
 	
 }
 
