@@ -1148,7 +1148,8 @@ public class PlalashopController {
 	   } catch (Exception e1) {  
 	    e1.printStackTrace();  
 	   }  
-	   return "point"  ;  
+
+	   return "point" ;  
 	  }
 	
 }
