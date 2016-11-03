@@ -160,12 +160,12 @@ div.party {
 	<div class="container" style="width: 90%">
 <!-- 		<div class="panel panel-default"> -->
 			<br> 
-			<form method="Post">
+			<form action="" method="Post">
 				<div  class="form-group" align="center">
 						<table style="width: 100%" border="0">
 							<tr>
-								<td style="width: 5%"></td>
-								<td align="left">
+								
+								<td align="left" colspan="2">
 									<detailLabel class="col-xs-12"><%= product.getProductType() %></detailLabel>
 								</td>
 								<td style="width: 5%"></td>
@@ -232,7 +232,7 @@ div.party {
 												<td align="right">
 													<span class="input-group-btn">
 														<button type="button" class="btn btn-link btn-number" onclick="del();" data-type="minus" data-field="quant[1]">
-															<span class="glyphicon glyphicon-minus"></span>
+															<span class="glyphicon glyphicon-minus" style="color: white;"></span>
 														</button>
 													</span> 
 												</td>
@@ -240,7 +240,7 @@ div.party {
 												<td align="left">
 													<span class="input-group-btn">
 													<button type="button" class="btn btn-link btn-number" onclick="add();" data-type="plus" data-field="quant[1]">
-														<span class="glyphicon glyphicon-plus"></span>
+														<span class="glyphicon glyphicon-plus" style="color: white;"></span>
 													</button>
 													</span>
 												

@@ -20,6 +20,10 @@ detailLabel {
 	
 }
 
+detailLabel2 {
+	color: white;
+}
+
 .botton-plala {
 background-color : white;
 border-radius: 10em 10em 10em 10em;
@@ -51,6 +55,7 @@ color: #1C6785;
    color: #1C6785;
 }
 
+
 @media ( min-width : 320px) {
 	big {
 		font-size: 30px;
@@ -61,7 +66,7 @@ color: #1C6785;
 		color: white;
 	}
 	detailLabel {
-		font-size: 15px;
+		font-size: 14px;
 	}
 }
 

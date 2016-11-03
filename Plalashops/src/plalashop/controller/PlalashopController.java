@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import plalashop.domain.Advertise;
+import plalashop.domain.Customer;
 import plalashop.domain.GroupProduct;
 import plalashop.domain.ImgMapping;
+import plalashop.domain.Orders;
 import plalashop.domain.Product;
 import plalashop.domain.ProductType;
 import plalashop.domain.User;
@@ -561,13 +563,12 @@ public class PlalashopController {
 	}
 	
 	@RequestMapping(value = "/detail")
-	public String detail(HttpServletRequest request) {
+	public void detail(HttpServletRequest request) {
 		try {
 			request.setCharacterEncoding("UTF-8");
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		return "detail";
 	}
 	@RequestMapping(value = "/adminAdvertise")
 	public String adminAdvertise(HttpServletRequest request) {
@@ -1152,5 +1153,86 @@ public class PlalashopController {
 	   return "point" ;  
 	  } 
 	
+	@SuppressWarnings("unused")
+	@RequestMapping(value = "/buyItem")
+	public String buyItem(HttpServletRequest request)throws Exception{
+		request.setCharacterEncoding("UTF-8");
+		
+		User user = (User)request.getSession().getAttribute(Utils.SESSION_USER_KEY);
+		try {
+				String id = (String) request.getParameter("id");
+				String qty = (String) request.getParameter("qty");
+				Product product = new Product();
+				Orders orders = new Orders();
+				product.setProductId(Long.parseLong(id));
+				product = PlalaShopsService.getProductsByProductsObj(product).get(0);
+				List<ImgMapping> imgList = PlalaShopsService.getImgMapping(id);
+				request.setAttribute("actionPage", "ShowDetail");
+				request.setAttribute("imgList", imgList);
+				request.setAttribute("product",product);
+				double price = product.getSalePrice();
+				
+				List<Orders> ordersList =PlalaShopsService.getPayDetail(orders);
+				
+				if (ordersList == null || ordersList.size() == 0) {
+					PlalaShopsService.insertOrder(1,"1",user.getUserLogin());
+				}
+				orders=PlalaShopsService.getPayDetail(orders).get(0);
+				PlalaShopsService.insertOrderDetail(orders.getOrderID(),id,qty,price);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+			
+		return "mobileHeader";
+	}
+	
+	@RequestMapping(value = "/customer") 
+	public String customer(HttpServletRequest request) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+			request.setAttribute("actionPage", "customer");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return "mobileHeader";
+	} 
+	@RequestMapping(value = "/createCustomer") 
+	public String createCustomer(HttpServletRequest request) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+			request.setAttribute("actionPage", "customer");
+			String customerName = request.getParameter("fullName");
+			String address = request.getParameter("address");
+			String zipCode = request.getParameter("zipcode");
+			User user = (User) request.getSession().getAttribute(
+					Utils.SESSION_USER_KEY);
+			Long userId = user.getUserId();
+			Customer customer = new Customer();
+			customer.setFullName(customerName);
+			customer.setAddress(address);
+			customer.setZipcode(zipCode);
+			customer.setUserId(userId);
+			PlalaShopsService.insertCustomer(customer);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return "mobileHeader";
+	}
+		
 }
 
+
+//List<User> userList = PlalaShopsService.getUserByUserObj(user);
+//if (userList != null && userList.size() > 0) {
+//	user = userList.get(0);
+//	if ("admin".equals(user.getRole()) || "superAdmin".equals(user.getRole())) {
+//		request.getSession().setAttribute(Utils.SESSION_USER_KEY, user);
+//		request.setAttribute(Utils.MENU, Utils.getMenuByRole(user.getRole()));
+//		request.setAttribute(Utils.MENU_SELECT, "Home");
+//		login = "adminHome";
+//	} else {
+//		request.setAttribute("message", "You is not Role Admin !!!!");
+//		login = "adminLoginAgen";
+//	}
+//} 

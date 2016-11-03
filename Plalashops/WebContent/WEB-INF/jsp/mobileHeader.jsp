@@ -106,33 +106,44 @@ footer {
 	
 	%>
 		  <div align="center">
-		  	<table border="0" style="width: 100%">
-		  <tr>
-		  	<td width="25%" align="center">
-	            <div id="custom-search-input">
-				  		<input type="text" class="form-control" style="width:80%;border-radius: 10em 10em 10em 10em;" readonly="readonly" >
-				</div>
-			</td>
-			<td colspan="3" align="center">
-	          	<div id="custom-search-input" align="center">
-	              <div class="input-group col-xs-12">
-	                  <input type="search" class="search-query form-control" placeholder="Search" style="border-radius: 10em 10em 10em 10em;" />
-	                  <span class="input-group-btn" >
-	                      <button class="btn btn-danger" type="button" style="margin-right: -10px">
-	                          <img src="img/search.png" width="15px"/>
-	                      </button>
-	                  </span>
-	              </div>
-	            </div>
-	          </td>
-			<td width="10%" align="left"> 
-			      <div id="custom-search-input" style="margin-right: 25px">
-			       <a href="#">
-          			<img src="img/shopping-cart2.png" width="30px"/>
-        		  </a>
-			  </div>
-			  </td>
-		  </tr>
+		  <table border="0" style="width: 100%">
+			  <tr>
+			  	<% if(actionPage.indexOf("Group")>= 0 || actionPage.indexOf("Home")>= 0 || actionPage.indexOf("Shop")>= 0){ %>
+			  	<td width="25%" align="center">
+		            <div id="custom-search-input">
+					  		<input type="text" class="form-control" style="width:80%;border-radius: 10em 10em 10em 10em;" readonly="readonly" >
+					</div>
+				</td>
+				<td colspan="3" align="center">
+		          	<div id="custom-search-input" align="center">
+		              <div class="input-group col-xs-12">
+		                  <input type="search" class="search-query form-control" placeholder="Search" style="border-radius: 10em 10em 10em 10em;" />
+		                  <span class="input-group-btn" >
+		                      <button class="btn btn-danger" type="button" style="margin-right: -10px">
+		                          <img src="img/search.png" width="15px"/>
+		                      </button>
+		                  </span>
+		              </div>
+		            </div>
+		          </td>
+		          <%}else{ %>
+		        	<td width="15%" align="center">
+			        	<div id="custom-search-input">
+			        		<big  onclick="window.history.back();"><b><</b></big>
+		        		</div>
+					</td>
+					<td colspan="3" align="center">
+			          	
+			          </td>
+		          <%} %>
+				  <td width="10%" align="left"> 
+				      <div id="custom-search-input" style="margin-right: 25px">
+				       <a href="#">
+	          			<img src="img/shopping-cart2.png" width="30px"/>
+	        		  </a>
+				  </div>
+				  </td>
+			  </tr>
 		  </table>
 		  </div>
 	</header>
@@ -148,6 +159,8 @@ footer {
 		<jsp:include page="item.jsp" />
 	<% }else if(actionPage.indexOf("ShowDetail")>= 0){%>
 		<jsp:include page="detail.jsp" />
+	<% }else if(actionPage.indexOf("customer")>= 0){%>
+		<jsp:include page="customer.jsp" />
 	<% } %>
 </body>
 </div>

@@ -11,9 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
 
+import javax.xml.soap.Detail;
+
+import org.springframework.core.annotation.Order;
+
 import plalashop.domain.Advertise;
+import plalashop.domain.Customer;
 import plalashop.domain.GroupProduct;
 import plalashop.domain.ImgMapping;
+import plalashop.domain.Orders;
 import plalashop.domain.Product;
 import plalashop.domain.ProductType;
 import plalashop.domain.User;
@@ -361,5 +367,101 @@ public class PlalaShopsService{
 		statement.setString(1, groupProductId);
 		statement.executeUpdate();
 	}
+	
+	
+	
+	public static void insertOrder(Integer customerID,String PaymentID,String login ) throws Exception{
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		String sql ="INSERT INTO orders(customerID,PaymentID,OrderDate,LastUpdateDate,UserLastUpdate)VALUES('"+customerID+"','"+PaymentID+"',DATE(NOW()),DATE(NOW()),'"+login+"')";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		
+		statement.executeUpdate();
+	}
+	
+	public static List<Orders> getPayDetail( Orders orders) throws Exception{
+		StringBuilder sql = new StringBuilder("SELECT * FROM orders WHERE CustomerID = 1 AND PaymentID ='1'");
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		Statement statement = connection.createStatement();
+		ResultSet resultSet = statement.executeQuery(sql.toString());
+		List<Orders> ortailList = new ArrayList<Orders>();
+		while (resultSet.next()) {
+			ortailList.add(new Orders(resultSet));
+		}
+		connection.close();
+		return ortailList;
+	}
+	
+	public static void insertOrderDetail(Long orderID,String productId,String qty,Double price) throws Exception{
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		Connection connection = DriverManager.getConnection(host, userDb, pass);
+		String sql ="INSERT INTO order_details(Order_ID,Product_ID,Quantity,Price,status)VALUES('"+orderID+"','"+productId+"','"+qty+"',"+price+",'buy')";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		
+		statement.executeUpdate();
+	}
+	
+	public static void insertCustomer(Customer customer) throws Exception{ 
+		Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+		Connection connection = DriverManager.getConnection(host, userDb, pass); 
+		String sql =" INSERT INTO plalashops.customer (fullName, address,zipcode, userId)VALUES(?, ?, ?, ?) "; 
+		PreparedStatement statement = connection.prepareStatement(sql); 
+		statement.setString(1, customer.getFullName()); 
+		statement.setString(2, customer.getAddress()); 
+		statement.setString(3, customer.getZipcode()); 
+		statement.setLong(4, customer.getUserId()); 
+		statement.executeUpdate(); 
+		} 
+
+
+		public static List<Customer> getCustomer(Customer customer) throws Exception{ 
+		StringBuilder sql = new StringBuilder(" SELECT * FROM customer WHERE 1 = 1 "); 
+		sql.append(Utils.whereInjection(customer.getCustomerId(), "customerId")); 
+		sql.append(Utils.whereInjection(customer.getCustomerId(), "fullName")); 
+		sql.append(Utils.whereInjection(customer.getCustomerId(), "address")); 
+		sql.append(Utils.whereInjection(customer.getCustomerId(), "zipcode")); 
+		sql.append(Utils.whereInjection(customer.getCustomerId(), "userId")); 
+		sql.append(" ORDER BY customerId "); 
+		Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+		Connection connection = DriverManager.getConnection(host, userDb, pass); 
+		Statement statement = connection.createStatement(); 
+		ResultSet resultSet = statement.executeQuery(sql.toString()); 
+		List<Customer> customerList = new ArrayList<Customer>(); 
+		while (resultSet.next()) { 
+		customerList.add(new Customer(resultSet)); 
+		} 
+		connection.close(); 
+		return customerList; 
+		} 
+
+		public static void deleteCustomer(String customerId) throws Exception{ 
+		Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+		Connection connection = DriverManager.getConnection(host, userDb, pass); 
+		String sql =" DELETE FROM customer WHERE customerId = ? "; 
+		PreparedStatement statement = connection.prepareStatement(sql); 
+		statement.setString(1, customerId); 
+		statement.executeUpdate(); 
+		} 
+
+		public static void updateCustomer(Customer customer) throws Exception{ 
+		Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+		Connection connection = DriverManager.getConnection(host, userDb, pass); 
+		StringBuilder sql = new StringBuilder(); 
+		sql.append(" UPDATE customer SET "); 
+		sql.append(" fullName = ? , "); 
+		sql.append(" address = ? , "); 
+		sql.append(" zipcode = ? , "); 
+		sql.append(" WHERE "); 
+		sql.append(" customerId = ? "); 
+		PreparedStatement statement = connection.prepareStatement(sql.toString()); 
+		statement.setString(1, customer.getFullName()); 
+		statement.setString(2, customer.getAddress()); 
+		statement.setString(3, customer.getZipcode()); 
+		statement.setLong(4, customer.getCustomerId()); 
+		statement.executeUpdate(); 
+		}
 
 }
+
+  
