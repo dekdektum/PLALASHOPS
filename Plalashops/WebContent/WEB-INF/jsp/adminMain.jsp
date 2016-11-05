@@ -9,7 +9,5 @@ body {
 </head>
 <body>
 	admin page
- 
-	
 </body>
 </html>

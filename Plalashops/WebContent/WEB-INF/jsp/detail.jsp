@@ -54,6 +54,7 @@ div.party {
 
 <%
 	Product product = (Product) request.getAttribute("product");
+	String actionMode = (String) request.getAttribute("actionMode");
 	List<ImgMapping> imgList = (List<ImgMapping>) request.getAttribute("imgList");
 %>
     <script type="text/javascript">
@@ -160,13 +161,14 @@ div.party {
 	<div class="container" style="width: 90%">
 <!-- 		<div class="panel panel-default"> -->
 			<br> 
-			<form action="" method="Post">
+			<form  method="Post"  action="buyItem.html">
+				<input type="hidden" id="id" name="id" value="<%= product.getProductId() %>">
 				<div  class="form-group" align="center">
 						<table style="width: 100%" border="0">
 							<tr>
-								
+							
 								<td align="left" colspan="2">
-									<detailLabel class="col-xs-12"><%= product.getProductType() %></detailLabel>
+									<detailLabel2 class="col-xs-12"><%= product.getProductType() %></detailLabel2>
 								</td>
 								<td style="width: 5%"></td>
 							</tr>
@@ -194,7 +196,7 @@ div.party {
 						</table>
 
 					   
-						<detailLabel id="special_price_area"  align="left">
+						<detailLabel2 id="special_price_area"  align="left">
 							<table style="width: 100%" border="0">
 								<tr>
 									<td style="width: auto;">
@@ -204,10 +206,14 @@ div.party {
 								</tr>
 								<tr>
 									<td style="width: auto;">
-										<detailLabel style="float: left;">ราคา  :&nbsp; </detailLabel> 
-										<span id="price_box">
-											<strike><%= product.getPrice() %>บาท </strike> 
-											<B style="color: red;"> &nbsp; ลดทันทีเหลือ  &nbsp;<B style="color: red;"><%= product.getSalePrice() %> บาท</B> </B>
+										<detailLabel2 style="float: left;">ราคา  :&nbsp; </detailLabel2> 
+										<span id="price_box"> 
+											<%if(product.getPrice() != null && product.getPrice() > 0 ){ %>
+												<strike><%= product.getPrice() %>บาท </strike> 
+												<B style="color: red;"> &nbsp; ลดทันทีเหลือ  &nbsp;<B style="color: red;"><%= product.getSalePrice() %> บาท </B></B>
+											<%}else{ %>
+												<B style="color: red;"> &nbsp; ขายเพียง  &nbsp;<B style="color: red;"><%= product.getSalePrice() %> บาท </B></B>
+											<%} %>
 										</span> 
 									</td>
 								</tr>
@@ -221,6 +227,7 @@ div.party {
 										<%=product.getDescription() %>
 									</td>
 								</tr>
+								<%if(!"pointMode".equals(actionMode)){ %>
 								<tr>
 									<td style="vertical-align: middle;">
 										<table border="0" >
@@ -236,7 +243,7 @@ div.party {
 														</button>
 													</span> 
 												</td>
-												<td style="width: 40%"><input type="number" id="qty" class="form-control input-number" value="1" min="1" max="10" style="color: #1C6785;text-align: center;" ></td>
+												<td style="width: 40%"><input type="number" id="qty" name="qty" class="form-control input-number" value="1" min="1" max="10" style="color: #1C6785;text-align: center;" ></td>
 												<td align="left">
 													<span class="input-group-btn">
 													<button type="button" class="btn btn-link btn-number" onclick="add();" data-type="plus" data-field="quant[1]">
@@ -249,19 +256,24 @@ div.party {
 										</table>
 									</td>
 								</tr>
-										
+								<%} %>		
 							</table>
 							<br>
 					     	<div align="center">
-								<button type="submit" class="btn btn-default btn-lg">ซื้อ</button>
+					     		<%if(!"pointMode".equals(actionMode)){ %>
+									<button type="submit" class="btn btn-default btn-lg">ซื้อ</button>
+								<%}else{%>
+									<button type="submit" class="btn btn-default btn-lg">แลกเลย</button>
+								<%} %>
 							</div>
-						</detailLabel>
+						</detailLabel2>
 						
 					</div>
-				</div>
-			</form>
+				</form>
+			</div>
+			
 <!-- 		</div> -->
-	</div>
+	<!-- </div> -->
 	
 	<script>
 $(document).ready(function() {
@@ -272,6 +284,7 @@ $(document).ready(function() {
       $(this).carousel('next');
    });
 });
+
 </script>
 	
 </body>

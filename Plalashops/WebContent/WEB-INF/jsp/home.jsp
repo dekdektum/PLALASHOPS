@@ -160,7 +160,7 @@
 			localStorage.setItem('password','<%= password %>');
 		</script>
 	<% } %>
-<div class="container">
+<div class="container" style="width: 100%">
 	<form method="Post">
 		<div class="form-group" align="center">
 			<div class="row">
@@ -222,7 +222,6 @@
 						                        <%}else{ %>
 						                            <p><br><B style="color: red;">฿<%= product.getSalePrice() %></B></p>
 						                        <%} %>
-						                    </div>
 						                </div>
 						            </div>
 							<%	} 
@@ -233,12 +232,12 @@
 					<%}
 					
 					if(newProductList != null && newProductList.size() > 0){%>
-				    <div class="panel panel-default" style="margin-bottom: 0px">
+				    <div class="panel panel-default" style="margin-bottom: 0px;width: 100%">
    	 					<div class="panel-heading" align="left">สินค้าใหม่</div>
 						    <div class="product-box-inner">
 						    	<div id="product-slide0" class="owl-carousel owl-theme">
 						    	<% for(Product product: newProductList){ 
-						    	if(product.getFileImage() != null){%>
+						    		if(product.getFileImage() != null){%>
 						            <div class="thumbnail" style="width: 100%;margin-bottom: 0px;" onclick="jsSendFormItem('<%= product.getProductId() %>');">
 								   		<img class="img-rounded"  src="<%= product.getFileImage() %>"/>
 						                <div class="caption">
@@ -250,8 +249,8 @@
 						                        <%} %>
 						                </div>
 						            </div>
-							<%	} 
-							} %>
+								<%	} 
+								} %>
 		               		</div>
 				         </div>
 					</div>

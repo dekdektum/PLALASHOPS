@@ -108,7 +108,7 @@ footer {
 		  <div align="center">
 		  <table border="0" style="width: 100%">
 			  <tr>
-			  	<% if(actionPage.indexOf("Group")>= 0 || actionPage.indexOf("Home")>= 0 || actionPage.indexOf("Shop")>= 0){ %>
+			  	<% if(actionPage.indexOf("Group")>= 0 || actionPage.indexOf("Home")>= 0 || actionPage.indexOf("Shop")>= 0 || actionPage.indexOf("Point")>= 0){ %>
 			  	<td width="25%" align="center">
 		            <div id="custom-search-input">
 					  		<input type="text" class="form-control" style="width:80%;border-radius: 10em 10em 10em 10em;" readonly="readonly" >
@@ -161,6 +161,8 @@ footer {
 		<jsp:include page="detail.jsp" />
 	<% }else if(actionPage.indexOf("customer")>= 0){%>
 		<jsp:include page="customer.jsp" />
+	<% }else if(actionPage.indexOf("Point")>= 0){%>
+		<jsp:include page="point.jsp" />
 	<% } %>
 </body>
 </div>
@@ -187,7 +189,7 @@ footer {
 		<div class="col-xs-3" align="center">
 		      <div id="custom-search-input" >
 			       <div href="#" style="color: white;" >
-          			<span>
+          			<span onclick="jsSendForm('point.html')">
           				<img src="img/icon-pv<%=actionPage.indexOf("PV") >= 0  ? "2" : "1" %>.png" height="50px">
           			</span>
         		  </div>
