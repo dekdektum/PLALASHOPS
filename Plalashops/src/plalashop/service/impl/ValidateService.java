@@ -39,18 +39,13 @@ public class ValidateService {
 		}
 		
 		
-		if(!Utils.isDouble(price)){
-			return "Price Invalit";
-		}
+		
 		
 		if(salePrice == null || salePrice.length() == 0){
 			return "Sale Price is empty!";
 		}else{
 			if(!Utils.isDouble(salePrice)){
 				return "Sale Price Invalit";
-			}
-			if(Double.parseDouble(price) < Double.parseDouble(salePrice)){
-				return "Sale Price < Price ";
 			}
 		}
 		if(description == null || description.length() == 0){

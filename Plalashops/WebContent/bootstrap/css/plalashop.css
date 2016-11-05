@@ -68,6 +68,9 @@ color: #1C6785;
 	detailLabel {
 		font-size: 14px;
 	}
+	detailLabel2 {
+		font-size: 14px;
+	}
 }
 
 @media ( min-width :375px) {
@@ -80,6 +83,9 @@ color: #1C6785;
 		color: white;
 	}
 	detailLabel {
+		font-size: 16px;
+	}
+	detailLabel2 {
 		font-size: 16px;
 	}
 }
@@ -96,6 +102,9 @@ color: #1C6785;
 	detailLabel {
 		font-size: 17px;
 	}
+	detailLabel2 {
+		font-size: 17px;
+	}
 }
 
 @media ( min-width :768px) {
@@ -110,6 +119,9 @@ color: #1C6785;
 	detailLabel {
 		font-size: 30px;
 	}
+	detailLabel2 {
+		font-size: 30px;
+	}
 }
 
 @media ( min-width : 1024px) {
@@ -122,6 +134,9 @@ color: #1C6785;
 		color: white;
 	}
 	detailLabel {
+		font-size: 45px;
+	}
+	detailLabel2 {
 		font-size: 45px;
 	}
 }
